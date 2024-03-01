@@ -12,3 +12,19 @@ exports.postUser=(req,res,next)=>{
 			console.log(err);
 		});
 }
+
+exports.userLogin=(req,res,next)=>{
+	const email=req.body.email;
+	const password=req.body.password;
+	User.findAll({where:{email:email}}).then((result) => {
+		console.log(result[0].password);
+		if(result[0].password===password){
+			res.status(200).json({"success":"true","message":"Login Successfully"});
+		}
+		else{
+			res.json({"success":"false","message":"password does not match"});
+		}
+	}).catch((err) => {
+		res.json({"success":"false","message":"email does not found"})
+	});
+}
