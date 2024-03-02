@@ -11,13 +11,9 @@ function userLogin(e){
 	user.email=email;
 	user.password=password;
 	axios.post('http://localhost:3000/user/login',user).then((res) => {
-		console.log(res.data);
-		console.log(res.data.success);
-		console.log(res.data.message);
-
 		const Msg=document.createElement('h2');
 			Msg.append(document.createTextNode(res.data.message));
-			Msg.style.color="red";
+			Msg.style.color="white";
 			main.appendChild(Msg);
 	}).catch((err) => {
 			console.log(err.response.data.message);

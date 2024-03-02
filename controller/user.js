@@ -1,29 +1,40 @@
 const User=require('../model/user');
+const bcrypt=require('bcrypt');
 
-exports.postUser=(req,res,next)=>{
-	const name=req.body.name;
-	const email=req.body.email;
-	const password=req.body.password;
-		User.create({name:name,email:email,password:password}).then((result) => {
-			res.status(200);
-			console.log(result);
-		}).catch((err) => {
-			res.status(403).send('Error:Request failed with status code 403');
-			console.log(err);
-		});
-}
-
-exports.userLogin=(req,res,next)=>{
-	const email=req.body.email;
-	const password=req.body.password;
-	User.findAll({where:{email:email}}).then((result) => {
-		if(result[0].password===password){
-			res.status(200).json({"success":"true","message":"User login Successfully"});
+exports.postUser=async (req,res,next)=>{
+	try{
+		const name=req.body.name;
+		const email=req.body.email;
+		const password=req.body.password;
+		if(await User.findAll({where:{email:email}})==false){
+			bcrypt.hash(password,10,async (err,hash)=>{
+				await User.create({name:name,email:email,password:hash});
+				res.status(200).json({message:'Successfully created new user'});
+			});
 		}
 		else{
-			res.status(401).json({"success":"false","message":"User not authorised"});
+			return res.json({success:false,message:'User already exist'});
 		}
-	}).catch((err) => {
-		res.status(404).json({"success":"false","message":"User not found"});
-	});
+	}catch(err){
+		console.log(err);
+	}
+}
+
+exports.userLogin=async (req,res,next)=>{
+	const email=req.body.email;
+	const password=req.body.password;
+	if(await  User.findAll({where:{email:email}})==false){
+		res.status(404).json({success:false,message:"User not found"});
+	}else{
+		User.findAll({where:{email:email}}).then(async (result) => {
+			if(await bcrypt.compare(password,result[0].password)){
+				res.status(200).json({success:true,message:"User login Successfully"});
+			}
+			else{
+				res.status(401).json({success:false,message:"User not authorised"});
+			}
+		}).catch((err) => {
+			res.json({success:false,message:err});
+		});
+	}
 }
