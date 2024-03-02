@@ -1,5 +1,5 @@
 const form=document.querySelector('form');
-const body=document.querySelector('body');
+const main=document.querySelector('main');
 
 form.addEventListener('submit',userLogin);
 
@@ -18,12 +18,12 @@ function userLogin(e){
 		const Msg=document.createElement('h2');
 			Msg.append(document.createTextNode(res.data.message));
 			Msg.style.color="red";
-			form.appendChild(Msg);
+			main.appendChild(Msg);
 	}).catch((err) => {
 			console.log(err.response.data.message);
 			const errMsg=document.createElement('h2');
-			errMsg.append(document.createTextNode(err.response.data));
+			errMsg.append(document.createTextNode(err.response.data.message));
 			errMsg.style.color="red";
-			form.appendChild(errMsg);
+			main.appendChild(errMsg);
 	});
 }

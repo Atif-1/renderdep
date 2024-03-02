@@ -17,14 +17,13 @@ exports.userLogin=(req,res,next)=>{
 	const email=req.body.email;
 	const password=req.body.password;
 	User.findAll({where:{email:email}}).then((result) => {
-		console.log(result[0].password);
 		if(result[0].password===password){
-			res.status(200).json({"success":"true","message":"Login Successfully"});
+			res.status(200).json({"success":"true","message":"User login Successfully"});
 		}
 		else{
-			res.json({"success":"false","message":"password does not match"});
+			res.status(401).json({"success":"false","message":"User not authorised"});
 		}
 	}).catch((err) => {
-		res.json({"success":"false","message":"email does not found"})
+		res.status(404).json({"success":"false","message":"User not found"});
 	});
 }
