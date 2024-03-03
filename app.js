@@ -11,8 +11,8 @@ const app=express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/expense',expenseRoute);
 app.use('/user',userRoute);
+app.use('/expense',expenseRoute);
 
 sequelize.sync().then(()=>{
 	app.listen(3000);
