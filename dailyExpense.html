@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Add Daily Expense</title>
+	<link href="signup.css" rel="stylesheet">
+</head>
+<body>
+	<main>
+		<form method="POST">
+			<label for="amount">Enter Amount</label>
+			<input type="number" class="input-fields" id="amount" name="amount">
+			<label for="description">Enter Description</label>
+			<input type="text" class="input-fields" id="description" name="description">
+			<label for="category">Choose a Category</label>
+			<select id="category" name="category">
+				<option>Food</option>
+				<option>Movie</option>
+				<option>Fuel</option>
+				<option>Electricity</option>
+			</select>
+			<input type="submit" id="formBtn">
+		</form>
+	</main>
+	<ul id="expense-list"></ul>
+	<script src="dailyExpense.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>
