@@ -3,8 +3,11 @@ const body=document.querySelector('body');
 const main=document.querySelector('main');
 const list=document.querySelector('ul');
 
+
 window.addEventListener('DOMContentLoaded',()=>{
-	axios.get("http://localhost:3000/expense/getExpenses").then((result) => {
+	const token=localStorage.getItem("token");
+	console.log(token);
+	axios.get("http://localhost:3000/expense/getExpenses",{headers:{'Authorization':token}}).then((result) => {
 		for(let i=0;i<result.data.length;i++){
 			display(result.data[i]);
 		}
@@ -24,7 +27,13 @@ function addExpense(e){
 	expObject.amount=amount;
 	expObject.description=description;
 	expObject.category=category;
-	axios.post("http://localhost:3000/expense/addExpense",expObject).then((result) => {
+	const token=localStorage.getItem('token');
+	const authHeader={
+		headers:{
+			"Authorization":token
+		}
+	}
+	axios.post("http://localhost:3000/expense/addExpense",expObject,authHeader).then((result) => {
 		alert("please refresh the page");
 		console.log(result.data);
 	}).catch((err) => {
@@ -47,7 +56,13 @@ function display(obj){
 	delBtn.addEventListener('click',deleteExpense);
 	function deleteExpense(e){
 		const id=(e.target.parentElement.firstChild).value;
-		axios.delete("http://localhost:3000/expense/deleteExpense/"+id).then((result) => {
+		const token=localStorage.getItem('token');
+		const authHeader={
+			headers:{
+				"Authorization":token
+			}
+		}
+		axios.delete("http://localhost:3000/expense/deleteExpense/"+id,authHeader).then((result) => {
 			alert("please refresh the page");
 			console.log(result.data.message);
 		}).catch((err) => {

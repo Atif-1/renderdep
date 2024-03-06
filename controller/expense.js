@@ -5,14 +5,15 @@ exports.addExpense=async(req,res,next)=>{
 		const amount=req.body.amount;
 		const description=req.body.description;
 		const category=req.body.category;
-		await Expense.create({amount:amount,description:description,category:category});
+
+		await Expense.create({amount:amount,description:description,category:category,userId:req.user.id});
 		res.status(200).json({success:true,message:"Expense added successfully"});
 	}catch(err){res.json({success:false,message:err});}
 }
 
 exports.getExpenses=async (req,res,next)=>{
 	try{
-	const expenses=await Expense.findAll();
+	const expenses=await Expense.findAll({where:{userId:req.user.id}});
 	res.status(200).json(expenses);
 	}catch(err){
 		console.log(err);
@@ -22,7 +23,7 @@ exports.getExpenses=async (req,res,next)=>{
 exports.deleteExpense=async (req,res,next)=>{
 	try{
 	const id=req.params.id;
-	await Expense.destroy({where:{id:id}});
+	await Expense.destroy({where:{id:id,userId:req.user.id}});
 	res.json({success:true,message:"deleted successfully"});
 	}
 	catch(err){

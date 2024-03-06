@@ -11,7 +11,9 @@ function userLogin(e){
 	user.email=email;
 	user.password=password;
 	axios.post('http://localhost:3000/user/login',user).then((res) => {
+		console.log(res.data.token);
 		if(res.data.success){
+			localStorage.setItem("token",res.data.token);
 			window.location.assign("http://127.0.0.1:5500/dailyExpense.html");
 		}
 		else{

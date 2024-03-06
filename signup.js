@@ -19,6 +19,7 @@ function userSignup(e){
 			msg.append(document.createTextNode(res.data.message));
 			msg.style.color="red";
 			main.appendChild(msg);
+			window.location.assign("http://127.0.0.1:5500/login.html")
 	}).catch((err) => {
 		if(err.response.status==403){
 			const errMsg=document.createElement('h2');

@@ -1,5 +1,10 @@
 const User=require('../model/user');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
+
+function generatetoken(id){
+	return jwt.sign({userId:id},"secretKey");
+}
 
 exports.postUser=async (req,res,next)=>{
 	try{
@@ -28,7 +33,7 @@ exports.userLogin=async (req,res,next)=>{
 	}else{
 		User.findAll({where:{email:email}}).then(async (result) => {
 			if(await bcrypt.compare(password,result[0].password)){
-				res.status(200).json({success:true,message:"User login Successfully"});
+				res.status(200).json({success:true,message:"User login Successfully",token:generatetoken(result[0].id)});
 			}
 			else{
 				res.status(401).json({success:false,message:"User not authorised"});
