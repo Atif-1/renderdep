@@ -1,4 +1,5 @@
 const Expense=require('../model/expense');
+const User=require('../model/user');
 
 exports.addExpense=async(req,res,next)=>{
 	try{	
@@ -14,7 +15,9 @@ exports.addExpense=async(req,res,next)=>{
 exports.getExpenses=async (req,res,next)=>{
 	try{
 	const expenses=await Expense.findAll({where:{userId:req.user.id}});
-	res.status(200).json(expenses);
+	const user=await User.findOne({where:{id:req.user.id}});
+	const ispremium=user.ispremium;
+	res.status(200).json({expenses,ispremium});
 	}catch(err){
 		console.log(err);
 		res.json(err);}

@@ -1,15 +1,26 @@
+
+
 const form=document.querySelector('form');
 const body=document.querySelector('body');
 const main=document.querySelector('main');
 const list=document.querySelector('ul');
+const premiumBtn=document.querySelector("#rzp-btn1");
 
 
 window.addEventListener('DOMContentLoaded',()=>{
 	const token=localStorage.getItem("token");
-	console.log(token);
 	axios.get("http://localhost:3000/expense/getExpenses",{headers:{'Authorization':token}}).then((result) => {
-		for(let i=0;i<result.data.length;i++){
-			display(result.data[i]);
+		console.log(result);
+		for(let i=0;i<result.data.expenses.length;i++){
+			display(result.data.expenses[i]);
+		}
+		if(result.data.ispremium==false){
+			premiumBtn.addEventListener('click',buypremium);
+		}
+		else{
+			premiumBtn.innerHTML="PREMIUM USER";
+			premiumBtn.style.color="gold";
+			premiumBtn.style.fontSize="larger";
 		}
 	}).catch((err) => {
 		console.log(err);
@@ -50,6 +61,7 @@ function display(obj){
 	li.append(document.createTextNode("-"+obj.description));
 	li.append(document.createTextNode("-"+obj.category));
 	const delBtn=document.createElement('button');
+	delBtn.className="delBtn";
 	delBtn.append(document.createTextNode("delete expense"));
 	li.append(delBtn);
 	list.appendChild(li);
@@ -69,4 +81,36 @@ function display(obj){
 			console.log(err);
 		});
 	}
+}
+
+async function buypremium(e){
+	const token	=localStorage.getItem("token");
+	const response=await axios.get('http://localhost:3000/purchase/premiummembership',{headers:{"Authorization":token}});
+	console.log(response);
+	var options={
+		"key":response.data.key_id,
+		"order_id":response.data.order.id,
+		"handler":async function(result){
+			await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+				status:'success',
+				order_id:options.order_id,
+				payment_id:result.razorpay_payment_id},{
+					headers:{"Authorization":token}	
+			})
+			alert("Your are premium member");
+		},
+	};
+	const rzp1=new Razorpay(options);
+		rzp1.open();
+		e.preventDefault();
+		rzp1.on('payment.failed',function(result){
+			axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+				status:'failed',
+				order_id:options.order_id,
+				payment_id:result.error.metadata.payment_id},{
+					headers:{"Authorization":token}	
+			})
+			alert("Something went wrong");
+		});
+
 }

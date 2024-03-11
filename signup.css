@@ -1,6 +1,8 @@
 body{
+	margin: 0;
+	padding: 0;
 	background-color: rgb(202, 228, 202);
-}
+}	
 a{
 	border: 1px solid rgb(108, 174, 108);
 	font-size: larger;
@@ -48,9 +50,34 @@ input{
 	background-color: rgb(11, 78, 11);
 	color: white;
 }
+.delBtn{
+	background-color: white;
+	color: red;
+	border: 1px solid red;
+	border-radius: 1rem;
+}
+.delBtn:hover{
+	background-color: red;
+	color: white;
+
+}
 li{
-	
 	background-color: rgb(212, 206, 206);
 	margin: 1rem;
 	padding: 0.5rem;
+}
+.navbar{
+	background-color:darkgreen ;
+	margin-bottom:1rem ;
+	padding: 1rem;
+}
+.navbar button{
+	height: 2rem;
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-size: large;
+	background-color: rgb(255, 221, 25);
+	color: black;
+	border: 2px solid yellow;
+	border-radius: 1rem;
+	cursor: pointer;
 }

@@ -13,7 +13,7 @@ exports.postUser=async (req,res,next)=>{
 		const password=req.body.password;
 		if(await User.findAll({where:{email:email}})==false){
 			bcrypt.hash(password,10,async (err,hash)=>{
-				await User.create({name:name,email:email,password:hash});
+				await User.create({name:name,email:email,password:hash,ispremium:false});
 				res.status(200).json({message:'Successfully created new user'});
 			});
 		}
