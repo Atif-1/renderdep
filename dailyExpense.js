@@ -3,7 +3,9 @@
 const form=document.querySelector('form');
 const body=document.querySelector('body');
 const main=document.querySelector('main');
-const list=document.querySelector('ul');
+const nav=document.querySelector('nav');
+const list=document.querySelector('#expense-list');
+const board=document.querySelector('#leaderboard')
 const premiumBtn=document.querySelector("#rzp-btn1");
 
 
@@ -14,13 +16,18 @@ window.addEventListener('DOMContentLoaded',()=>{
 		for(let i=0;i<result.data.expenses.length;i++){
 			display(result.data.expenses[i]);
 		}
-		if(result.data.ispremium==false){
-			premiumBtn.addEventListener('click',buypremium);
-		}
-		else{
-			premiumBtn.innerHTML="PREMIUM USER";
+		if(result.data.ispremium==true){
+			premiumBtn.innerHTML="YOU ARE A PREMIUM USER";
 			premiumBtn.style.color="gold";
 			premiumBtn.style.fontSize="larger";
+			const proFeature=document.createElement('button');
+			proFeature.append(document.createTextNode("Leaderboard"));
+			nav.append(proFeature);
+			proFeature.addEventListener('click',leaderBoard);
+		}
+		else{
+			premiumBtn.addEventListener('click',buypremium);
+			
 		}
 	}).catch((err) => {
 		console.log(err);
@@ -110,7 +117,23 @@ async function buypremium(e){
 				payment_id:result.error.metadata.payment_id},{
 					headers:{"Authorization":token}	
 			})
-			alert("Something went wrong");
+			alert(" Transaction Failed");
 		});
 
 }
+function leaderBoard(){
+	const token=localStorage.getItem("token");
+	axios.get('http://localhost:3000/premium/leaderboard',{headers:{"Authorization":token}}).then((result) => {
+		result.data.forEach((obj) => {
+			showLeaderboard(obj);
+		});
+	}).catch((err) => {
+		console.log(err);
+	});
+}
+function showLeaderboard(obj){
+	const li=document.createElement('li');
+	li.append(document.createTextNode(`Name:${obj.name} Total Expense:${obj.TotalExpense}`));
+	board.appendChild(li);
+}
+
