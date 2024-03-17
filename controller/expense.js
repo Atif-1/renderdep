@@ -8,9 +8,7 @@ exports.addExpense=async(req,res,next)=>{
 		const category=req.body.category;
 		const user=await User.findByPk(req.user.id);
 		const currentTotal=parseInt(await user.totalexpenses);
-		console.log(currentTotal);
 		const recentAmt=parseInt(amount);
-		console.log(amount);
 		await Expense.create({amount:amount,description:description,category:category,userId:req.user.id});
 		await User.update({totalexpenses:currentTotal+recentAmt},{where:{id:req.user.id}});
 		res.status(200).json({success:true,message:"Expense added successfully"});
