@@ -133,7 +133,7 @@ function leaderBoard(){
 }
 function showLeaderboard(obj){
 	const li=document.createElement('li');
-	li.append(document.createTextNode(`Name:${obj.name} Total Expense:${obj.TotalExpense}`));
+	li.append(document.createTextNode(`Name:${obj.name} Total Expense:${obj.total_cost}`));
 	board.appendChild(li);
 }
 
