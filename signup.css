@@ -72,12 +72,31 @@ li{
 	padding: 1rem;
 }
 .navbar button{
+	margin: 2px;
 	height: 2rem;
 	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 	font-size: large;
 	background-color: rgb(255, 221, 25);
 	color: black;
 	border: 2px solid yellow;
-	border-radius: 1rem;
+	border-radius: 0.8rem;
 	cursor: pointer;
+}
+#table-heading{
+	text-align: center;
+}
+table{
+	margin-left: auto;
+	margin-right:auto ;
+	margin-top: 10px;
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+table td,table th{
+	padding: 10px;
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+}
+table tr:first-child td{
+	border: none;
 }
