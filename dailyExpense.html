@@ -7,7 +7,10 @@
 	<link href="signup.css" rel="stylesheet">
 </head>
 <body>
-	<nav class="navbar" id="rzp-btn1"><button>Buy Premium</button></nav>
+	<div id="buy-btn-msg"></div>
+	<nav class="navbar" >
+		<button id="rzp-btn1">Buy Premium</button>
+	</nav>
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<main>
 		<form method="POST">
@@ -36,6 +39,8 @@
 		</tr>
 	</table>
 	<ul id="leaderboard"><h2><u>LeaderBoard</u></h2></ul>
+	<button id="download-btn" onclick="download()">Download</button>
+	<ul id="download-links"><h2>Download History</h2></ul>
 	<script src="dailyExpense.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>

@@ -1,6 +1,29 @@
+const { Body } = require('sib-api-v3-sdk');
 const Expense=require('../model/expense');
 const User=require('../model/user');
+const DownloadLink=require('../model/downloadLink');
 const sequelize=require('../util/database');
+const AWS=require('aws-sdk');
+const S3Services=require('../services/S3services');
+const UserServices=require('../services/userservice');
+
+exports.downloadExpenses=async(req,res,next)=>{
+	try{
+	console.log("in download");
+	const expenses=await UserServices.getExpenses(req);
+	const stringifyFileData=JSON.stringify(expenses);
+	const userId=req.user.id;
+	const fileName=`Expenses${userId}/${new Date()}.txt`;
+	const fileUrl=await S3Services.uploadToS3(stringifyFileData,fileName);
+	DownloadLink.create({url:fileUrl,userId:req.user.id});
+	res.status(200).json({fileUrl,success:true});
+	}catch(err){
+		console.log(err);
+		res.status(500).json(err);
+	}
+}
+
+
 
 exports.addExpense=async(req,res,next)=>{
 	const t=await sequelize.transaction();

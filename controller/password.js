@@ -1,6 +1,7 @@
 const Sib = require('sib-api-v3-sdk');
 const uuid=require('uuid');
 const bcrypt=require('bcrypt');
+require("dotenv").config();
 
 const ForgetPasswordRequest=require('../model/ForgetPasswordRequest');
 const User=require('../model/user');
@@ -10,11 +11,11 @@ const forgetPasswordRequest = require('../model/ForgetPasswordRequest');
 
 const client = Sib.ApiClient.instance;
 const apiKey=client.authentications['api-key'];
-apiKey.apiKey='';
+apiKey.apiKey=process.env.BREVO_API_KEY;
 const tranEmailApi=new Sib.TransactionalEmailsApi();
-const sender={
-	email:'',
-	name:''
+const sender={	
+	email:process.env.MY_EMAIL,
+	name:process.env.MY_NAME
 }
 exports.sendMail=async(req,res,next)=>{
 	const uuidV4=uuid.v4();

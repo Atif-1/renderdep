@@ -7,18 +7,34 @@ const nav=document.querySelector('nav');
 const table=document.querySelector('#expense-list');
 const board=document.querySelector('#leaderboard')
 const premiumBtn=document.querySelector("#rzp-btn1");
+const buyBtnMsg=document.querySelector('#buy-btn-msg');
+const downloadBtn=document.querySelector('#download-btn');
+const downloadList=document.querySelector('#download-links');
 
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
 const token=localStorage.getItem("token");
-window.addEventListener('DOMContentLoaded',()=>{
-	axios.get("http://localhost:3000/expense/getExpenses",{headers:{'Authorization':token}}).then((result) => {
+window.addEventListener('DOMContentLoaded',async ()=>{
+	try{
+	const result=await axios.get("http://localhost:3000/expense/getExpenses",{headers:{'Authorization':token}})
 		console.log(result);
 		for(let i=0;i<result.data.expenses.length;i++){
 			display(result.data.expenses[i]);
 		}
-		if(result.data.ispremium==true){
-			premiumBtn.innerHTML="YOU ARE A PREMIUM USER";
-			premiumBtn.style.color="gold";
-			premiumBtn.style.fontSize="larger";
+		const decodedTkn=parseJwt(token);
+		if(decodedTkn.ispremium==true){
+			premiumBtn.style.visibility="hidden";
+			buyBtnMsg.innerHTML="You Are A Premium User";
+			buyBtnMsg.style.color="gold";
+			buyBtnMsg.style.background="darkred";
+			buyBtnMsg.style.fontSize="large";
 			const proFeature1=document.createElement('button');
 			proFeature1.append(document.createTextNode("Leaderboard"));
 			nav.append(proFeature1);
@@ -35,18 +51,18 @@ window.addEventListener('DOMContentLoaded',()=>{
 			proFeature4.append(document.createTextNode("Yearly"));
 			nav.append(proFeature4);
 			proFeature4.addEventListener('click',yearlyExp);
-			const proFeature5=document.createElement('button');
-			proFeature5.append(document.createTextNode("Download"));
-			nav.append(proFeature5);
-			proFeature5.addEventListener('click',download);
 		}
 		else{
 			premiumBtn.addEventListener('click',buypremium);
+			downloadBtn.disabled="true";
 			
 		}
-	}).catch((err) => {
-		console.log(err);
-	});
+		const downloads=await axios.get("http://localhost:3000/downloads/getDownloadLinks",{headers:{'Authorization':token}});
+		console.log(downloads.data);
+		for(let i=0;i<downloads.data.downloadLinks.length;i++){
+			showDownloads(downloads.data.downloadLinks[i]);
+		}
+	}catch(err){console.log(err);}
 })
 
 form.addEventListener('submit',addExpense);
@@ -159,18 +175,23 @@ function showLeaderboard(obj){
 	board.appendChild(li);
 }
 function daily(){
-
+	axios.get("http://localhost:3000/expense/getExpenses",{headers:{'Authorization':token}}).then((result) => {
+		for(let i=0;i<result.data.expenses.length;i++){
+			
+		}
+	})
 }
 function monthlyExp(){
 
+	
 }
 function yearlyExp(){
 
 }
 function download(){
-		axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+		axios.get('http://localhost:3000/premium/download', { headers: {"Authorization" : token} })
 		.then((response) => {
-			if(response.status === 201){
+			if(response.status === 200){
 				var a = document.createElement("a");
 				a.href = response.data.fileUrl;
 				a.download = 'myexpense.csv';
@@ -181,6 +202,15 @@ function download(){
 	
 		})
 		.catch((err) => {
-			showError(err)
+			console.log(err);
 		});
-	}
+}
+function showDownloads(obj){
+	const li=document.createElement('li');
+	const a=document.createElement('a');
+	a.href=obj.url;
+	a.append(document.createTextNode(obj.url));
+	li.append(a);
+	li.append(document.createTextNode(" | "+obj.createdAt));
+	downloadList.appendChild(li);
+}
