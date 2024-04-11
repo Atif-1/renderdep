@@ -38,9 +38,13 @@
 		<th>Category</th>
 		</tr>
 	</table>
-	<ul id="leaderboard"><h2><u>LeaderBoard</u></h2></ul>
+	<div id="exp-pagination"></div>
 	<button id="download-btn" onclick="download()">Download</button>
-	<ul id="download-links"><h2>Download History</h2></ul>
+	<ul id="leaderboard"><h2><u>LeaderBoard</u></h2></ul>
+	<ul id="download-links"><h2><u>Download History</u></h2></ul>
+	<ul id="daily-exp"><h2><u>Daily Expenses</u></h2></ul><button id="dailyBtn" onclick="dailyExp()" disabled="true">show</button> 
+	<ul id="weekly-exp"><h2><u>Weekly Expenses</u></h2> </ul><button id="weeklyBtn" onclick="weeklyExp()" disabled="true">show</button> 
+	<ul id="monthly-exp"><h2><u>Monthly Expenses</u></h2> </ul><button id="monthlyBtn" onclick="monthlyExp()" disabled="true" >show</button> 
 	<script src="dailyExpense.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>

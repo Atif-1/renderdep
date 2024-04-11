@@ -3,25 +3,25 @@ const Expense=require('../model/expense');
 const User=require('../model/user');
 const DownloadLink=require('../model/downloadLink');
 const sequelize=require('../util/database');
-const AWS=require('aws-sdk');
-const S3Services=require('../services/S3services');
+// const AWS=require('aws-sdk');
+// const S3Services=require('../services/S3services');
 const UserServices=require('../services/userservice');
 
 exports.downloadExpenses=async(req,res,next)=>{
-	try{
-	console.log("in download");
-	const expenses=await UserServices.getExpenses(req);
-	const stringifyFileData=JSON.stringify(expenses);
-	const userId=req.user.id;
-	const fileName=`Expenses${userId}/${new Date()}.txt`;
-	const fileUrl=await S3Services.uploadToS3(stringifyFileData,fileName);
-	DownloadLink.create({url:fileUrl,userId:req.user.id});
-	res.status(200).json({fileUrl,success:true});
-	}catch(err){
-		console.log(err);
-		res.status(500).json(err);
-	}
-}
+// 	try{
+// 	console.log("in download");
+// 	const expenses=await UserServices.getExpenses(req);
+// 	const stringifyFileData=JSON.stringify(expenses);
+// 	const userId=req.user.id;
+// 	const fileName=`Expenses${userId}/${new Date()}.txt`;
+// 	const fileUrl=await S3Services.uploadToS3(stringifyFileData,fileName);
+// 	DownloadLink.create({url:fileUrl,userId:req.user.id});
+// 	res.status(200).json({fileUrl,success:true});
+// 	}catch(err){
+// 		console.log(err);
+// 		res.status(500).json(err);
+// 	}
+ }
 
 
 
@@ -46,10 +46,22 @@ exports.addExpense=async(req,res,next)=>{
 
 exports.getExpenses=async (req,res,next)=>{
 	try{
-	const expenses=await Expense.findAll({where:{userId:req.user.id}});
-	const user=await User.findOne({where:{id:req.user.id}});
-	const ispremium=user.ispremium;
-	res.status(200).json({expenses,ispremium});
+	const page=req.params.page;
+	const total_expense=await Expense.findAll().length()
+	const expenses=await Expense.findAll({
+		offset:(page-1)*10,
+		limit:10
+	});
+	res.json({
+		expenses:expenses, 
+		currentPage:page,
+		hasNextPage:(10*page)<total_expense,
+		nextPage:parseInt(page)+1,
+		hasPreviousPage:page>1,
+		previousPage:parseInt(page)-1,
+		lastPage:Math.ceil(total_expense/10)
+	})
+
 	}catch(err){
 		console.log(err);
 		res.json(err);}

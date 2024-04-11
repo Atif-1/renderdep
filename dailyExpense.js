@@ -1,5 +1,3 @@
-
-
 const form=document.querySelector('form');
 const body=document.querySelector('body');
 const main=document.querySelector('main');
@@ -10,7 +8,14 @@ const premiumBtn=document.querySelector("#rzp-btn1");
 const buyBtnMsg=document.querySelector('#buy-btn-msg');
 const downloadBtn=document.querySelector('#download-btn');
 const downloadList=document.querySelector('#download-links');
-
+const dailyList=document.querySelector('#daily-exp');
+const dailyBtn=document.querySelector('#dailyBtn');
+const weeklyList=document.querySelector('#weekly-exp');
+const weeklyBtn=document.querySelector('#weeklyBtn');
+const monthlyList=document.querySelector('#monthly-exp');
+const monthlyBtn=document.querySelector('#monthlyBtn');
+const pagination=document.querySelector('#exp-pagination');
+var totalExpenses=[];
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -23,11 +28,13 @@ function parseJwt (token) {
 const token=localStorage.getItem("token");
 window.addEventListener('DOMContentLoaded',async ()=>{
 	try{
-	const result=await axios.get("http://localhost:3000/expense/getExpenses",{headers:{'Authorization':token}})
-		console.log(result);
+		const page=1;
+	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token}})
 		for(let i=0;i<result.data.expenses.length;i++){
 			display(result.data.expenses[i]);
+			totalExpenses.push(result.data.expenses[i]);
 		}
+		showPagination(result.data);
 		const decodedTkn=parseJwt(token);
 		if(decodedTkn.ispremium==true){
 			premiumBtn.style.visibility="hidden";
@@ -39,18 +46,9 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 			proFeature1.append(document.createTextNode("Leaderboard"));
 			nav.append(proFeature1);
 			proFeature1.addEventListener('click',leaderBoard);
-			const proFeature2=document.createElement('button');
-			proFeature2.append(document.createTextNode("Daily"));
-			nav.append(proFeature2);
-			proFeature2.addEventListener('click',daily);
-			const proFeature3=document.createElement('button');
-			proFeature3.append(document.createTextNode("Monthly"));
-			nav.append(proFeature3);
-			proFeature3.addEventListener('click',monthlyExp);
-			const proFeature4=document.createElement('button');
-			proFeature4.append(document.createTextNode("Yearly"));
-			nav.append(proFeature4);
-			proFeature4.addEventListener('click',yearlyExp);
+			dailyBtn.disabled=false;
+			weeklyBtn.disabled=false;
+			monthlyBtn.disabled=false;
 		}
 		else{
 			premiumBtn.addEventListener('click',buypremium);
@@ -58,10 +56,10 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 			
 		}
 		const downloads=await axios.get("http://localhost:3000/downloads/getDownloadLinks",{headers:{'Authorization':token}});
-		console.log(downloads.data);
 		for(let i=0;i<downloads.data.downloadLinks.length;i++){
 			showDownloads(downloads.data.downloadLinks[i]);
 		}
+		
 	}catch(err){console.log(err);}
 })
 
@@ -174,20 +172,6 @@ function showLeaderboard(obj){
 	li.append(document.createTextNode(`Name:${obj.name} Total Expense:${obj.total_cost}`));
 	board.appendChild(li);
 }
-function daily(){
-	axios.get("http://localhost:3000/expense/getExpenses",{headers:{'Authorization':token}}).then((result) => {
-		for(let i=0;i<result.data.expenses.length;i++){
-			
-		}
-	})
-}
-function monthlyExp(){
-
-	
-}
-function yearlyExp(){
-
-}
 function download(){
 		axios.get('http://localhost:3000/premium/download', { headers: {"Authorization" : token} })
 		.then((response) => {
@@ -213,4 +197,83 @@ function showDownloads(obj){
 	li.append(a);
 	li.append(document.createTextNode(" | "+obj.createdAt));
 	downloadList.appendChild(li);
+}
+function dailyExp(){
+	for(let exp of totalExpenses){
+		if(new Date(exp.createdAt).getFullYear()== new Date().getFullYear()){
+			if(new Date(exp.createdAt).getDate()== new Date().getDate() && new Date(exp.createdAt).getMonth()== new Date().getMonth()){
+				const li=document.createElement('li');
+				li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
+				dailyList.appendChild(li);
+			}
+		}
+	}
+	dailyBtn.style.visibility="hidden";
+}
+function weeklyExp(){
+	// for(let exp of totalExpenses){
+	// 	if(new Date(exp.createdAt).getFullYear()== new Date().getFullYear()){
+	// 		if(new Date(exp.createdAt).getMonth()== new Date().getMonth()){
+	// 			if(new Date(exp.createdAt).getDate()>=new Date().getDate && new Date(exp.createdAt)>(new Date().getDate())-7){
+	// 				const li=document.createElement('li');
+	// 				li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
+	// 				weeklyList.appendChild(li);
+	// 			}
+	// 		}
+	// 	}
+	//}
+	console.log(new Date().getWeek());
+	weeklyBtn.style.visibility="hidden";
+}
+function monthlyExp(){
+	const h3=document.createElement('h3');
+	h3.style.color="red";
+	h3.append(document.createTextNode(new Date().toLocaleString('default', { month: 'long' })));
+	monthlyList.appendChild(h3);
+	for(let exp of totalExpenses){
+		if(new Date(exp.createdAt).getFullYear()== new Date().getFullYear()){
+			if(new Date(exp.createdAt).getMonth()== new Date().getMonth()){
+				const li=document.createElement('li');
+				li.append(document.createTextNode(`Amount:${exp.amount}  Description:${exp.description}   Category:${exp.category}`));
+				monthlyList.appendChild(li);
+			}
+		}
+	}
+	monthlyBtn.style.visibility="hidden";
+	
+}
+function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previousPage,lastPage}){
+	pagination.innerHTML="";
+	if(hasPreviousPage){
+		const btn2=document.createElement('button');
+		btn2.innerHTML=previousPage
+		btn2.addEventListener('click',()=>getExpense(previousPage));
+		pagination.appendChild(btn2);
+	}
+	const btn1=document.createElement('button');
+		btn1.innerHTML=`<h3>${currentPage}</h3>`
+		btn1.addEventListener('click',()=>getExpense(currentPage));
+		pagination.appendChild(btn1);
+	if(hasNextPage){
+		const btn3=document.createElement('button');
+		btn3.innerHTML=nextPage;
+		btn3.addEventListener('click',()=>getExpense(nextPage));
+		pagination.appendChild(btn3);
+	}
+	const btn4=document.createElement('button');
+		btn4.innerHTML=`lastPage`
+		btn4.addEventListener('click',()=>getExpense(lastPage));
+		pagination.appendChild(btn4);
+}
+async function getExpense(page){
+	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token}})
+	while (table.firstChild) {
+		table.removeChild(table.lastChild);
+	  }
+
+	for(let i=0;i<result.data.expenses.length;i++){
+		display(result.data.expenses[i]);
+		totalExpenses.push(result.data.expenses[i]);
+	}
+		showPagination(result.data);
 }
