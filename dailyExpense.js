@@ -15,6 +15,8 @@ const weeklyBtn=document.querySelector('#weeklyBtn');
 const monthlyList=document.querySelector('#monthly-exp');
 const monthlyBtn=document.querySelector('#monthlyBtn');
 const pagination=document.querySelector('#exp-pagination');
+const rows=document.querySelector('#row-num');
+localStorage.setItem("rows",rows.value);
 var totalExpenses=[];
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
@@ -29,7 +31,7 @@ const token=localStorage.getItem("token");
 window.addEventListener('DOMContentLoaded',async ()=>{
 	try{
 		const page=1;
-	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token}})
+	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
 		for(let i=0;i<result.data.expenses.length;i++){
 			display(result.data.expenses[i]);
 			totalExpenses.push(result.data.expenses[i]);
@@ -251,7 +253,7 @@ function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previo
 		pagination.appendChild(btn2);
 	}
 	const btn1=document.createElement('button');
-		btn1.innerHTML=`<h3>${currentPage}</h3>`
+		btn1.innerHTML=`<h4>${currentPage}</h4>`
 		btn1.addEventListener('click',()=>getExpense(currentPage));
 		pagination.appendChild(btn1);
 	if(hasNextPage){
@@ -262,11 +264,11 @@ function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previo
 	}
 	const btn4=document.createElement('button');
 		btn4.innerHTML=`lastPage`
-		btn4.addEventListener('click',()=>getExpense(lastPage));
+		btn4.addEventListener('click',()=>getExpense(`lastPage->${lastPage}`));
 		pagination.appendChild(btn4);
 }
 async function getExpense(page){
-	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token}})
+	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
 	while (table.firstChild) {
 		table.removeChild(table.lastChild);
 	  }

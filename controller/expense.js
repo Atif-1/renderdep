@@ -6,6 +6,7 @@ const sequelize=require('../util/database');
 // const AWS=require('aws-sdk');
 // const S3Services=require('../services/S3services');
 const UserServices=require('../services/userservice');
+const { where } = require('sequelize');
 
 exports.downloadExpenses=async(req,res,next)=>{
 // 	try{
@@ -47,19 +48,28 @@ exports.addExpense=async(req,res,next)=>{
 exports.getExpenses=async (req,res,next)=>{
 	try{
 	const page=req.params.page;
-	const total_expense=await Expense.findAll().length()
-	const expenses=await Expense.findAll({
-		offset:(page-1)*10,
-		limit:10
+	const rows=parseInt(req.header("rows"));
+	const total_expenses=await Expense.findAll({where:{userId:req.user.id}});
+	let totalexp=0;
+	for(let t of total_expenses){
+		totalexp++;
+	}
+	console.log(totalexp);
+
+	const expenses=await Expense.findAll({where:{
+		userId:req.user.id
+	},
+		offset:(page-1)*rows,
+		limit:rows
 	});
 	res.json({
 		expenses:expenses, 
 		currentPage:page,
-		hasNextPage:(10*page)<total_expense,
+		hasNextPage:(rows*page)<totalexp,
 		nextPage:parseInt(page)+1,
-		hasPreviousPage:page>1,
+		hasPreviousPage:parseInt(page)>1,
 		previousPage:parseInt(page)-1,
-		lastPage:Math.ceil(total_expense/10)
+		lastPage:Math.ceil(totalexp/rows)
 	})
 
 	}catch(err){
