@@ -1,7 +1,9 @@
 const express=require('express');
 const cors=require('cors');
+const helmet=require('helmet');
 
 const sequelize=require('./util/database');
+const app=express();
 
 const userRoute=require('./routes/user');
 const expenseRoute=require('./routes/expense');
@@ -10,13 +12,13 @@ const premiumRoute=require('./routes/premium');
 const passwordRoute=require('./routes/password');
 const downloadRoutes=require('./routes/downloads');
 
+app.use(helmet());
+
 const User=require('./model/user');
 const Expense=require('./model/expense');
 const Order=require('./model/orders');
 const ForgetPasswordRequests=require('./model/ForgetPasswordRequest');
 const DownloadLinks=require('./model/downloadLink');
-
-const app=express();
 
 app.use(cors());
 app.use(express.json());
@@ -41,5 +43,5 @@ User.hasMany(DownloadLinks);
 DownloadLinks.belongsTo(User);
 
 sequelize.sync().then(()=>{
-	app.listen(3000);
+	app.listen(process.env.PORT || 3000);
 })

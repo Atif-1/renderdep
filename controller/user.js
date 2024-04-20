@@ -1,6 +1,7 @@
 const User=require('../model/user');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
+const logger=require('../util/logger');
 
 function generatetoken(id,name,ispremium){
 	return jwt.sign({userId:id,name:name,ispremium:ispremium},"secretKey");
@@ -21,7 +22,7 @@ exports.postUser=async (req,res,next)=>{
 			return res.json({success:false,message:'User already exist'});
 		}
 	}catch(err){
-		console.log(err);
+		logger.error('controller-user'+err);
 	}
 }
 
@@ -39,7 +40,8 @@ exports.userLogin=async (req,res,next)=>{
 				res.status(401).json({success:false,message:"User not authorised"});
 			}
 		}).catch((err) => {
-			res.json({success:false,message:err});
+			logger.error('controller-user'+err);
+			res.json({success:false});
 		});
 	}
 }

@@ -6,7 +6,8 @@ const sequelize=require('../util/database');
 // const AWS=require('aws-sdk');
 // const S3Services=require('../services/S3services');
 const UserServices=require('../services/userservice');
-const { where } = require('sequelize');
+const logger=require('../util/logger');
+
 
 exports.downloadExpenses=async(req,res,next)=>{
 // 	try{
@@ -41,7 +42,8 @@ exports.addExpense=async(req,res,next)=>{
 		res.status(200).json({success:true,message:"Expense added successfully"});
 	}catch(err){
 		await t.rollback();
-		res.json({success:false,message:err});
+		logger.error('controller-expense'+err);
+		res.json({success:false});
 	}
 }
 
@@ -54,7 +56,6 @@ exports.getExpenses=async (req,res,next)=>{
 	for(let t of total_expenses){
 		totalexp++;
 	}
-	console.log(totalexp);
 
 	const expenses=await Expense.findAll({where:{
 		userId:req.user.id
@@ -73,8 +74,9 @@ exports.getExpenses=async (req,res,next)=>{
 	})
 
 	}catch(err){
-		console.log(err);
-		res.json(err);}
+		logger.error('controller-expense'+err);
+		res.status(500);
+	}
 }
 
 exports.deleteExpense=async (req,res,next)=>{
@@ -93,6 +95,6 @@ exports.deleteExpense=async (req,res,next)=>{
 	}
 	catch(err){
 		await t.rollback();
-		console.log(err);
+		logger.error('controller-expense'+err);
 	}
 }

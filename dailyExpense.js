@@ -17,7 +17,6 @@ const monthlyBtn=document.querySelector('#monthlyBtn');
 const pagination=document.querySelector('#exp-pagination');
 const rows=document.querySelector('#row-num');
 localStorage.setItem("rows",rows.value);
-var totalExpenses=[];
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -30,16 +29,15 @@ function parseJwt (token) {
 const token=localStorage.getItem("token");
 window.addEventListener('DOMContentLoaded',async ()=>{
 	try{
-		const page=1;
+	const page=1;
 	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
 		for(let i=0;i<result.data.expenses.length;i++){
 			display(result.data.expenses[i]);
-			totalExpenses.push(result.data.expenses[i]);
 		}
 		showPagination(result.data);
 		const decodedTkn=parseJwt(token);
 		if(decodedTkn.ispremium==true){
-			premiumBtn.style.visibility="hidden";
+			premiumBtn.remove();
 			buyBtnMsg.innerHTML="You Are A Premium User";
 			buyBtnMsg.style.color="gold";
 			buyBtnMsg.style.background="darkred";
@@ -83,7 +81,6 @@ function addExpense(e){
 	}
 	axios.post("http://localhost:3000/expense/addExpense",expObject,authHeader).then((result) => {
 		alert("please refresh the page");
-		console.log(result.data);
 	}).catch((err) => {
 		console.log(err);
 	});
@@ -224,7 +221,6 @@ function weeklyExp(){
 	// 		}
 	// 	}
 	//}
-	console.log(new Date().getWeek());
 	weeklyBtn.style.visibility="hidden";
 }
 function monthlyExp(){
@@ -263,15 +259,15 @@ function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previo
 		pagination.appendChild(btn3);
 	}
 	const btn4=document.createElement('button');
-		btn4.innerHTML=`lastPage`
-		btn4.addEventListener('click',()=>getExpense(`lastPage->${lastPage}`));
+		btn4.innerHTML=`lastPage ->${lastPage}`
+		btn4.addEventListener('click',()=>getExpense(lastPage));
 		pagination.appendChild(btn4);
 }
 async function getExpense(page){
 	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
-	while (table.firstChild) {
-		table.removeChild(table.lastChild);
-	  }
+	for(let i=table.rows.length-1;i>0;i--){
+		table.deleteRow(i);
+	}
 
 	for(let i=0;i<result.data.expenses.length;i++){
 		display(result.data.expenses[i]);

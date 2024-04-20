@@ -7,11 +7,16 @@
 	<link href="signup.css" rel="stylesheet">
 </head>
 <body>
-	<div id="buy-btn-msg"></div>
 	<nav class="navbar" >
+		<div class="nav-right">
+			<a href="./signup.html">Sign Up</a>
+			<a href="./login.html">Login</a>
+		</div>
 		<button id="rzp-btn1">Buy Premium</button>
+		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	</nav>
-	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	<div id="buy-btn-msg"></div>
+	<div id="top-heading"><h1>Expense Tracker</h1></div>
 	<main>
 		<form method="POST">
 			<label for="amount">Expense Amount</label>

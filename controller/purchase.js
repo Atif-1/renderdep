@@ -1,5 +1,6 @@
 const Razorpay=require('razorpay');
 const Order=require('../model/orders');
+const logger=require('../util/logger');
 
 exports.purchasepremium=async(req,res)=>{
 	try{
@@ -19,7 +20,7 @@ exports.purchasepremium=async(req,res)=>{
 			});
 		})
 	}catch(err){
-		console.log(err);
+		logger.error('controller-purchase'+err);
 		res.status(403).json({message:'Something went wrong',error:err})}
 }
 
@@ -32,10 +33,10 @@ exports.updateTransactionStatus=(req,res)=>{
 			Promise.all([Promise1,promise2]).then(() => {
 				return res.status(202).json({success:true,message:"Transaction Successfull"});
 			}).catch((err) => {
-				console.log(err);
+				logger.error('controller-purchase'+err);
 			});
 		}).catch((err) => {
 			throw new Error(err);
 		});
-	}catch(err){console.log(err);}
+	}catch(err){logger.error('controller-purchase'+err);}
 }

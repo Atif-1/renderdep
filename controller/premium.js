@@ -1,5 +1,6 @@
 const Expense=require('../model/expense');
 const User=require('../model/user');
+const logger=require('../util/logger');
 
 exports.getLeaderboard=async(req,res,next)=>{
 	try{
@@ -12,8 +13,8 @@ exports.getLeaderboard=async(req,res,next)=>{
 		console.log(leaderboard);
 		res.status(200).json(leaderboard);
 	}catch(err){
-		console.log(err);
-		res.status(500).json(err);
+		logger.error('controller-premium'+err);
+		res.status(500);
 	}
 
 }
