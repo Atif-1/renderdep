@@ -13,13 +13,13 @@ function userSignup(e){
 	user.name=name;
 	user.email=email;
 	user.password=password;
-	axios.post('http://localhost:3000/user/signup',user).then((res) => {
+	axios.post('http://13.232.8.255:3000/user/signup',user).then((res) => {
 		const msg=document.createElement('h2');
 			console.log(res.status);
 			msg.append(document.createTextNode(res.data.message));
 			msg.style.color="red";
 			main.appendChild(msg);
-			window.location.assign("http://127.0.0.1:5500/login.html")
+			window.location.assign("./login.html")
 	}).catch((err) => {
 		if(err.response.status==403){
 			const errMsg=document.createElement('h2');

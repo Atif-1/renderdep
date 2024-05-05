@@ -2,9 +2,12 @@ const User=require('../model/user');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 const logger=require('../util/logger');
+require("dotenv").config();
+
+
 
 function generatetoken(id,name,ispremium){
-	return jwt.sign({userId:id,name:name,ispremium:ispremium},"secretKey");
+	return jwt.sign({userId:id,name:name,ispremium:ispremium},process.env.TOKEN_SECRET);
 }
 
 exports.postUser=async (req,res,next)=>{

@@ -1,9 +1,12 @@
 const express=require('express');
+const path=require('path');
 const cors=require('cors');
 const helmet=require('helmet');
 
+
 const sequelize=require('./util/database');
 const app=express();
+app.use(helmet());
 
 const userRoute=require('./routes/user');
 const expenseRoute=require('./routes/expense');
@@ -12,7 +15,6 @@ const premiumRoute=require('./routes/premium');
 const passwordRoute=require('./routes/password');
 const downloadRoutes=require('./routes/downloads');
 
-app.use(helmet());
 
 const User=require('./model/user');
 const Expense=require('./model/expense');
@@ -21,7 +23,7 @@ const ForgetPasswordRequests=require('./model/ForgetPasswordRequest');
 const DownloadLinks=require('./model/downloadLink');
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json());	
 
 app.use('/user',userRoute);
 app.use('/expense',expenseRoute);
@@ -29,6 +31,10 @@ app.use('/purchase',purchaseRoute);
 app.use('/premium',premiumRoute);
 app.use('/password',passwordRoute);
 app.use('/downloads',downloadRoutes);
+app.use((req,res)=>{
+	console.log(req.url);
+	res.sendFile(path.join(__dirname,`/public/${req.url}`));
+})
 
 User.hasMany(Expense);
 Expense.belongsTo(User);

@@ -31,7 +31,7 @@ exports.sendMail=async(req,res,next)=>{
 				sender,
 				to:reciever,
 				subject:'Demo Reset Password',
-				textContent:`http://localhost:3000/password/resetpassword/${uuidV4}`
+				textContent:`http://13.232.8.255:3000/password/resetpassword/${uuidV4}`
 			});
 			res.json({message:'successfull'});
 		}
@@ -47,7 +47,7 @@ exports.resetPassword=async(req,res,next)=>{
 		const userUuid=req.params.uuid; 
 		const passwordRequest=await ForgetPasswordRequest.findByPk(userUuid);
 		if(passwordRequest.isactive){
-			res.status(200).redirect('http://127.0.0.1:5500/updatepassword.html');
+			res.status(200).redirect('../public/updatepassword.html');//ip address
 		}
 		else{
 			res.json({message:'failed'});

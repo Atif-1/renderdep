@@ -5,18 +5,19 @@ form.addEventListener('submit',userLogin);
 
 function userLogin(e){
 	e.preventDefault();
+	console.log("in login");
 	const email=document.querySelector('#email').value;
 	const password=document.querySelector('#password').value;
 	var user=new Object();
 	user.email=email;
 	user.password=password;
-	axios.post('http://localhost:3000/user/login',user).then((res) => {
+	axios.post('http://13.232.8.255:3000/user/login',user).then((res) => {
 		console.log(res.data.token);
 		if(res.data.success){
 			localStorage.setItem("token",res.data.token);
-			window.location.assign("http://127.0.0.1:5500/dailyExpense.html");
+			window.location.assign("./dailyExpense.html");
 		}
-		else{
+		else{ 
 		const Msg=document.createElement('h2');
 			Msg.append(document.createTextNode(res.data.message));
 			Msg.style.color="white";

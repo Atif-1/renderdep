@@ -16,7 +16,10 @@ const monthlyList=document.querySelector('#monthly-exp');
 const monthlyBtn=document.querySelector('#monthlyBtn');
 const pagination=document.querySelector('#exp-pagination');
 const rows=document.querySelector('#row-num');
+const fromLabel=document.querySelector('#fromDate');
+const toLabel=document.querySelector('#toDate');
 localStorage.setItem("rows",rows.value);
+var totalExpenses=[];
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -30,7 +33,7 @@ const token=localStorage.getItem("token");
 window.addEventListener('DOMContentLoaded',async ()=>{
 	try{
 	const page=1;
-	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
+	const result=await axios.get(`http://13.232.8.255:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
 		for(let i=0;i<result.data.expenses.length;i++){
 			display(result.data.expenses[i]);
 		}
@@ -43,6 +46,7 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 			buyBtnMsg.style.background="darkred";
 			buyBtnMsg.style.fontSize="large";
 			const proFeature1=document.createElement('button');
+			proFeature1.id="leaderboard-btn";
 			proFeature1.append(document.createTextNode("Leaderboard"));
 			nav.append(proFeature1);
 			proFeature1.addEventListener('click',leaderBoard);
@@ -55,10 +59,12 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 			downloadBtn.disabled="true";
 			
 		}
-		const downloads=await axios.get("http://localhost:3000/downloads/getDownloadLinks",{headers:{'Authorization':token}});
+		const downloads=await axios.get("http://13.232.8.255:3000/downloads/getDownloadLinks",{headers:{'Authorization':token}});
 		for(let i=0;i<downloads.data.downloadLinks.length;i++){
 			showDownloads(downloads.data.downloadLinks[i]);
 		}
+		const res=await axios.get(`http://13.232.8.255:3000/expense/getTotalExpenses`,{headers:{'Authorization':token}});
+		totalExpenses=[...res.data];
 		
 	}catch(err){console.log(err);}
 })
@@ -79,7 +85,7 @@ function addExpense(e){
 			"Authorization":token
 		}
 	}
-	axios.post("http://localhost:3000/expense/addExpense",expObject,authHeader).then((result) => {
+	axios.post("http://13.232.8.255:3000/expense/addExpense",expObject,authHeader).then((result) => {
 		alert("please refresh the page");
 	}).catch((err) => {
 		console.log(err);
@@ -118,7 +124,7 @@ function display(obj){
 				"Authorization":token
 			}
 		}
-		axios.delete("http://localhost:3000/expense/deleteExpense/"+id,authHeader).then((result) => {
+		axios.delete("http://13.232.8.255:3000/expense/deleteExpense/"+id,authHeader).then((result) => {
 			alert("please refresh the page");
 			console.log(result.data.message);
 		}).catch((err) => {
@@ -128,13 +134,13 @@ function display(obj){
 }
 
 async function buypremium(e){
-	const response=await axios.get('http://localhost:3000/purchase/premiummembership',{headers:{"Authorization":token}});
+	const response=await axios.get('http://13.232.8.255:3000/purchase/premiummembership',{headers:{"Authorization":token}});
 	console.log(response);
 	var options={
 		"key":response.data.key_id,
 		"order_id":response.data.order.id,
 		"handler":async function(result){
-			await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+			await axios.post('http://13.232.8.255:3000/purchase/updatetransactionstatus',{
 				status:'success',
 				order_id:options.order_id,
 				payment_id:result.razorpay_payment_id},{
@@ -147,7 +153,7 @@ async function buypremium(e){
 		rzp1.open();
 		e.preventDefault();
 		rzp1.on('payment.failed',function(result){
-			axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+			axios.post('http://13.232.8.255:3000/purchase/updatetransactionstatus',{
 				status:'failed',
 				order_id:options.order_id,
 				payment_id:result.error.metadata.payment_id},{
@@ -158,13 +164,14 @@ async function buypremium(e){
 
 }
 function leaderBoard(){
-	axios.get('http://localhost:3000/premium/leaderboard',{headers:{"Authorization":token}}).then((result) => {
+	axios.get('http://13.232.8.255:3000/premium/leaderboard',{headers:{"Authorization":token}}).then((result) => {
 		result.data.forEach((obj) => {
 			showLeaderboard(obj);
 		});
 	}).catch((err) => {
 		console.log(err);
 	});
+	document.getElementById('leaderboard-btn').disabled=true;
 }
 function showLeaderboard(obj){
 	const li=document.createElement('li');
@@ -172,7 +179,7 @@ function showLeaderboard(obj){
 	board.appendChild(li);
 }
 function download(){
-		axios.get('http://localhost:3000/premium/download', { headers: {"Authorization" : token} })
+		axios.get('http://13.232.8.255:3000/premium/download', { headers: {"Authorization" : token} })
 		.then((response) => {
 			if(response.status === 200){
 				var a = document.createElement("a");
@@ -198,44 +205,104 @@ function showDownloads(obj){
 	downloadList.appendChild(li);
 }
 function dailyExp(){
+	let dailyExpenses=[];
+	const h4=document.createElement('h4');
+	h4.style.color="red";
 	for(let exp of totalExpenses){
 		if(new Date(exp.createdAt).getFullYear()== new Date().getFullYear()){
 			if(new Date(exp.createdAt).getDate()== new Date().getDate() && new Date(exp.createdAt).getMonth()== new Date().getMonth()){
-				const li=document.createElement('li');
-				li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
-				dailyList.appendChild(li);
+				dailyExpenses.push(exp);
 			}
 		}
+	}
+	if(dailyExpenses.length>0){
+		let dailyTotal=0
+		for(let exp of dailyExpenses){
+			total+=exp.amount;
+			const li=document.createElement('li');
+			li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
+			dailyList.appendChild(li);
+		}
+		h4.append(document.createTextNode(`Total  Expense-:${dailyTotal}`));
+		dailyList.appendChild(h4);
+	}
+	else{
+		h4.append(document.createTextNode('No expense'));
+		dailyList.appendChild(h4);
 	}
 	dailyBtn.style.visibility="hidden";
 }
 function weeklyExp(){
-	// for(let exp of totalExpenses){
-	// 	if(new Date(exp.createdAt).getFullYear()== new Date().getFullYear()){
-	// 		if(new Date(exp.createdAt).getMonth()== new Date().getMonth()){
-	// 			if(new Date(exp.createdAt).getDate()>=new Date().getDate && new Date(exp.createdAt)>(new Date().getDate())-7){
-	// 				const li=document.createElement('li');
-	// 				li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
-	// 				weeklyList.appendChild(li);
-	// 			}
-	// 		}
-	// 	}
-	//}
-	weeklyBtn.style.visibility="hidden";
+	let dateOffset = (24*60*60*1000) * 6; //6 days
+	let end = new Date();
+	let start=new Date();
+
+	start.setTime(end.getTime() - dateOffset);
+	const weeklyExpenses=[];
+	const h4=document.createElement('h4');
+	h4.style.color="red";
+	if(start && end){
+		for(let exp of totalExpenses){
+			if(new Date(exp.createdAt).getFullYear()>=new Date(start).getFullYear() && new Date(exp.createdAt).getFullYear()<=new Date(end).getFullYear()){
+				if(new Date(exp.createdAt).getMonth()>=new Date(start).getMonth() && new Date(exp.createdAt).getMonth()<=new Date(end).getMonth()){
+					if(new Date(exp.createdAt).getDate()>=new Date(start).getDate() && new Date(exp.createdAt).getDate()<=new Date(end).getDate()){
+						weeklyExpenses.push(exp);
+					}
+				}
+			}
+		}
+		if(weeklyExpenses.length>0){
+			let weeekTotal=0;
+			for(let exp of weeklyExpenses){
+				weeekTotal+=exp.amount;
+				const li=document.createElement('li');
+				li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
+				weeklyList.appendChild(li);
+			}
+			h4.append(document.createTextNode(` Total Expense-:${weeekTotal}`));
+			weeklyList.appendChild(h4);
+		}
+		else{
+			h4.append(document.createTextNode(`No expenses`));
+			weeklyList.appendChild(h4);
+		}
+		weeklyBtn.style.visibility="hidden";
+	}
+	else{
+		alert("please fill start and end date");
+	}
 }
 function monthlyExp(){
+	const monthlyExpenses=[];
 	const h3=document.createElement('h3');
 	h3.style.color="red";
+	let monthTotal=0;
 	h3.append(document.createTextNode(new Date().toLocaleString('default', { month: 'long' })));
 	monthlyList.appendChild(h3);
 	for(let exp of totalExpenses){
 		if(new Date(exp.createdAt).getFullYear()== new Date().getFullYear()){
 			if(new Date(exp.createdAt).getMonth()== new Date().getMonth()){
-				const li=document.createElement('li');
-				li.append(document.createTextNode(`Amount:${exp.amount}  Description:${exp.description}   Category:${exp.category}`));
-				monthlyList.appendChild(li);
+				monthlyExpenses.push(exp);
 			}
 		}
+	}
+	if(monthlyExpenses.length>0){
+		for(let exp of monthlyExpenses){
+			monthTotal+=exp.amount;
+			const li=document.createElement('li');
+			li.append(document.createTextNode(`Amount:${exp.amount}  Description:${exp.description}   Category:${exp.category}`));
+			monthlyList.appendChild(li);
+		}
+		const h4=document.createElement('h4');
+		h4.style.color="red";
+		h4.append(document.createTextNode(`Total Expense-:${monthTotal}`));
+		monthlyList.appendChild(h4);
+	}
+	else{
+		const h4=document.createElement('h4');
+		h4.style.color="red";
+		h4.append(document.createTextNode(`No Expenses`));
+		monthlyList.appendChild(h4);
 	}
 	monthlyBtn.style.visibility="hidden";
 	
@@ -264,14 +331,18 @@ function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previo
 		pagination.appendChild(btn4);
 }
 async function getExpense(page){
-	const result=await axios.get(`http://localhost:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
+	const result=await axios.get(`http://13.232.8.255:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
 	for(let i=table.rows.length-1;i>0;i--){
 		table.deleteRow(i);
 	}
 
 	for(let i=0;i<result.data.expenses.length;i++){
 		display(result.data.expenses[i]);
-		totalExpenses.push(result.data.expenses[i]);
 	}
 		showPagination(result.data);
+}
+function logout(){
+	localStorage.removeItem("token");
+	window.location.assign('./login.html');
+
 }

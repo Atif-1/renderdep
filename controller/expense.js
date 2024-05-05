@@ -1,28 +1,27 @@
-const { Body } = require('sib-api-v3-sdk');
 const Expense=require('../model/expense');
 const User=require('../model/user');
 const DownloadLink=require('../model/downloadLink');
 const sequelize=require('../util/database');
-// const AWS=require('aws-sdk');
-// const S3Services=require('../services/S3services');
+const AWS=require('aws-sdk');
+const S3Services=require('../services/S3services');
 const UserServices=require('../services/userservice');
 const logger=require('../util/logger');
 
 
 exports.downloadExpenses=async(req,res,next)=>{
-// 	try{
-// 	console.log("in download");
-// 	const expenses=await UserServices.getExpenses(req);
-// 	const stringifyFileData=JSON.stringify(expenses);
-// 	const userId=req.user.id;
-// 	const fileName=`Expenses${userId}/${new Date()}.txt`;
-// 	const fileUrl=await S3Services.uploadToS3(stringifyFileData,fileName);
-// 	DownloadLink.create({url:fileUrl,userId:req.user.id});
-// 	res.status(200).json({fileUrl,success:true});
-// 	}catch(err){
-// 		console.log(err);
-// 		res.status(500).json(err);
-// 	}
+	try{
+	console.log("in download");
+	const expenses=await UserServices.getExpenses(req);
+	const stringifyFileData=JSON.stringify(expenses);
+	const userId=req.user.id;
+	const fileName=`Expenses${userId}/${new Date()}.txt`;
+	const fileUrl=await S3Services.uploadToS3(stringifyFileData,fileName);
+	DownloadLink.create({url:fileUrl,userId:req.user.id});
+	res.status(200).json({fileUrl,success:true});
+	}catch(err){
+		console.log(err);
+		res.status(500).json(err);
+	}
  }
 
 
@@ -49,13 +48,11 @@ exports.addExpense=async(req,res,next)=>{
 
 exports.getExpenses=async (req,res,next)=>{
 	try{
-	const page=req.params.page;
+	const page=parseInt(req.params.page);
 	const rows=parseInt(req.header("rows"));
 	const total_expenses=await Expense.findAll({where:{userId:req.user.id}});
-	let totalexp=0;
-	for(let t of total_expenses){
-		totalexp++;
-	}
+	let totalexp=total_expenses.length;
+	
 
 	const expenses=await Expense.findAll({where:{
 		userId:req.user.id
@@ -67,9 +64,9 @@ exports.getExpenses=async (req,res,next)=>{
 		expenses:expenses, 
 		currentPage:page,
 		hasNextPage:(rows*page)<totalexp,
-		nextPage:parseInt(page)+1,
-		hasPreviousPage:parseInt(page)>1,
-		previousPage:parseInt(page)-1,
+		nextPage:page+1,
+		hasPreviousPage:page>1,
+		previousPage:page-1,
 		lastPage:Math.ceil(totalexp/rows)
 	})
 
@@ -96,5 +93,14 @@ exports.deleteExpense=async (req,res,next)=>{
 	catch(err){
 		await t.rollback();
 		logger.error('controller-expense'+err);
+	}
+}
+
+exports.getTotalExpenses=async(req,res,next)=>{
+	try{
+		const totalExpenses=await Expense.findAll({where:{userId:req.user.id}});
+		res.json(totalExpenses);
+	}catch(err){
+		logger.error(`controller-expense ${err}`);
 	}
 }

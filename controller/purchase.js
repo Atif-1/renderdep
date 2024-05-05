@@ -1,12 +1,13 @@
 const Razorpay=require('razorpay');
 const Order=require('../model/orders');
 const logger=require('../util/logger');
+require("dotenv").config();
 
 exports.purchasepremium=async(req,res)=>{
 	try{
 		var rzp=new Razorpay({
-			key_id:"",
-			key_secret:""
+			key_id:process.env.PAYMENT_KEY_ID,
+			key_secret:process.env.PAYMENT_KEY_SECRET
 		})
 		const amount=2500;
 		rzp.orders.create({amount,currency:"INR"},(err,order)=>{
@@ -20,8 +21,8 @@ exports.purchasepremium=async(req,res)=>{
 			});
 		})
 	}catch(err){
-		logger.error('controller-purchase'+err);
-		res.status(403).json({message:'Something went wrong',error:err})}
+		logger.error(`controller-purchase - ${err} - ${new Date()}`);
+		res.status(403).json({message:'Something went wrong'})}
 }
 
 exports.updateTransactionStatus=(req,res)=>{
@@ -33,10 +34,10 @@ exports.updateTransactionStatus=(req,res)=>{
 			Promise.all([Promise1,promise2]).then(() => {
 				return res.status(202).json({success:true,message:"Transaction Successfull"});
 			}).catch((err) => {
-				logger.error('controller-purchase'+err);
+				logger.error(`controller-purchase - ${err} - ${new Date()}`);
 			});
 		}).catch((err) => {
 			throw new Error(err);
 		});
-	}catch(err){logger.error('controller-purchase'+err);}
+	}catch(err){logger.error(`controller-purchase - ${err} - ${new Date()}`);}
 }

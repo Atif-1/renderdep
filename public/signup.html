@@ -3,26 +3,30 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Login</title>
+	<title>Sign Up</title>
 	<link href="signup.css" rel="stylesheet">
 </head>
 <body>
 	<nav>
-		<a href="./signup.html">Sign Up</a>
-		<a href="./login.html" class="nav-active">Login</a>
-		
+		<div class="nav-right">
+			<a href="./signup.html" class="nav-active">Sign Up</a>
+			<a href="./login.html">Login</a>
+		</div>
 	</nav>
+	<div id="top-heading"><h1>Expense Tracker</h1></div>
 	<main>
-		<form method="POST">
+		<form action="." method="POST">
+			<label for="name">Enter Name</label><br>
+			<input type="text" id="name" class="input-fields" name="name" required><br>
 			<label for="email">Enter Email</label><br>
 			<input type="email" id="email" class="input-fields" name="email" required><br>
-		<label for="password">Enter Password</label><br>
+			<label for="password">Enter Password</label><br>
 			<input type="password" id="password" class="input-fields" name="password" required><br>
-			<input type="submit" id="formBtn" value="Login">
+			<input type="submit" id="formBtn" value="Sign Up">
+
 		</form>
-		<a href="./forgetpassword.html" class="forgetpass">Forget Password?</a>
 	</main>
-	<script src="login.js"></script>
+	<script src="signup.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>

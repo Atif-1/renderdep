@@ -8,12 +8,9 @@
 </head>
 <body>
 	<nav class="navbar" >
-		<div class="nav-right">
-			<a href="./signup.html">Sign Up</a>
-			<a href="./login.html">Login</a>
-		</div>
 		<button id="rzp-btn1">Buy Premium</button>
 		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+		<button id="btn-out" onclick="logout()">Logout</button>
 	</nav>
 	<div id="buy-btn-msg"></div>
 	<div id="top-heading"><h1>Expense Tracker</h1></div>
@@ -44,8 +41,7 @@
 		</tr>
 	</table>
 	<div id="exp-rows"><label>Rows per page:</label><select name="rows" id="row-num">
-		<option>2</option>
-		<option>4</option>
+		<option>5</option>
 		<option>10</option>
 		<option>25</option>
 		<option>50</option>
@@ -53,11 +49,13 @@
 	</select></div>
 	<div id="exp-pagination"></div>
 	<button id="download-btn" onclick="download()">Download</button>
-	<ul id="leaderboard"><h2><u>LeaderBoard</u></h2></ul>
-	<ul id="download-links"><h2><u>Download History</u></h2></ul>
-	<ul id="daily-exp"><h2><u>Daily Expenses</u></h2></ul><button id="dailyBtn" onclick="dailyExp()" disabled="true">show</button> 
-	<ul id="weekly-exp"><h2><u>Weekly Expenses</u></h2> </ul><button id="weeklyBtn" onclick="weeklyExp()" disabled="true">show</button> 
-	<ul id="monthly-exp"><h2><u>Monthly Expenses</u></h2> </ul><button id="monthlyBtn" onclick="monthlyExp()" disabled="true" >show</button> 
+	<hr>
+	<ul id="leaderboard"><h2>LeaderBoard</h2></ul>
+	<ul id="download-links"><h2>Download History</h2></ul>
+	<hr>
+	<ul id="daily-exp"><h3>Daily Expenses</h3></ul><button id="dailyBtn" onclick="dailyExp()" disabled="true">show</button> 
+	<ul id="weekly-exp"><h3>Weekly Expenses</h3> </ul><button id="weeklyBtn" onclick="weeklyExp()" disabled="true">show</button> 
+	<ul id="monthly-exp"><h3>Monthly Expenses</h3> </ul><button id="monthlyBtn" onclick="monthlyExp()" disabled="true" >show</button> 
 	<script src="dailyExpense.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>

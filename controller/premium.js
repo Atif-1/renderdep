@@ -10,7 +10,6 @@ exports.getLeaderboard=async(req,res,next)=>{
 			leaderboard.push({name:user.name ,total_cost:user.totalexpenses});
 		});
 		leaderboard.sort((a,b)=>b.total_cost-a.total_cost);
-		console.log(leaderboard);
 		res.status(200).json(leaderboard);
 	}catch(err){
 		logger.error('controller-premium'+err);
