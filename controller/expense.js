@@ -10,7 +10,6 @@ const logger=require('../util/logger');
 
 exports.downloadExpenses=async(req,res,next)=>{
 	try{
-	console.log("in download");
 	const expenses=await UserServices.getExpenses(req);
 	const stringifyFileData=JSON.stringify(expenses);
 	const userId=req.user.id;
