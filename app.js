@@ -2,11 +2,10 @@ const express=require('express');
 const path=require('path');
 const cors=require('cors');
 const helmet=require('helmet');
-
-
+require("dotenv").config();
 const sequelize=require('./util/database');
 const app=express();
-app.use(helmet());
+
 
 const userRoute=require('./routes/user');
 const expenseRoute=require('./routes/expense');

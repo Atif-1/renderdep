@@ -5,13 +5,12 @@ form.addEventListener('submit',userLogin);
 
 function userLogin(e){
 	e.preventDefault();
-	console.log("in login");
 	const email=document.querySelector('#email').value;
 	const password=document.querySelector('#password').value;
 	var user=new Object();
 	user.email=email;
 	user.password=password;
-	axios.post('http://13.232.8.255:3000/user/login',user).then((res) => {
+	axios.post('http://43.205.116.221/user/login',user).then((res) => {
 		console.log(res.data.token);
 		if(res.data.success){
 			localStorage.setItem("token",res.data.token);

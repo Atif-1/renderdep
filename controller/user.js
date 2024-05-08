@@ -12,6 +12,7 @@ function generatetoken(id,name,ispremium){
 
 exports.postUser=async (req,res,next)=>{
 	try{
+		console.log("in userconroller");
 		const name=req.body.name;
 		const email=req.body.email;
 		const password=req.body.password;

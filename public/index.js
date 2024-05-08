@@ -12,7 +12,7 @@ function userSignup(e){
 	user.name=name;
 	user.email=email;
 	user.password=password;
-	axios.post('http://13.232.8.255:3000/user/signup',user).then((res) => {
+	axios.post('http://43.205.116.221/user/signup',user).then((res) => {
 		console.log(res);
 	}).catch((err) => {
 		console.log(err.response.data);
