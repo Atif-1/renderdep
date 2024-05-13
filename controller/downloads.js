@@ -5,7 +5,6 @@ exports.getDownloads=async(req,res,next)=>{
 	try{
 	const id=req.user.id;
 	const downloadLinks=await DownloadLink.findAll({where:{userId:id}});
-	// console.log(downloadLinks);
 	res.status(200).json({downloadLinks});
 	}
 	catch(err){
