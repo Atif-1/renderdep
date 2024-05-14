@@ -10,7 +10,7 @@ function userLogin(e){
 	var user=new Object();
 	user.email=email;
 	user.password=password;
-	axios.post('http://65.1.131.247:3000/user/login',user).then((res) => {
+	axios.post('http://43.205.195.48:3000/user/login',user).then((res) => {
 		console.log(res.data.token);
 		if(res.data.success){
 			localStorage.setItem("token",res.data.token);

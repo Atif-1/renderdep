@@ -33,7 +33,7 @@ const token=localStorage.getItem("token");
 window.addEventListener('DOMContentLoaded',async ()=>{
 	try{
 	const page=1;
-	const result=await axios.get(`http://65.1.131.247:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
+	const result=await axios.get(`http://43.205.195.48:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
 		for(let i=0;i<result.data.expenses.length;i++){
 			display(result.data.expenses[i]);
 		}
@@ -59,11 +59,11 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 			downloadBtn.disabled="true";
 			
 		}
-		const downloads=await axios.get("http://65.1.131.247:3000/downloads/getDownloadLinks",{headers:{'Authorization':token}});
+		const downloads=await axios.get("http://43.205.195.48:3000/downloads/getDownloadLinks",{headers:{'Authorization':token}});
 		for(let i=0;i<downloads.data.downloadLinks.length;i++){
 			showDownloads(downloads.data.downloadLinks[i]);
 		}
-		const res=await axios.get(`http://65.1.131.247:3000/expense/getTotalExpenses`,{headers:{'Authorization':token}});
+		const res=await axios.get(`http://43.205.195.48:3000/expense/getTotalExpenses`,{headers:{'Authorization':token}});
 		totalExpenses=[...res.data];
 		
 	}catch(err){console.log(err);}
@@ -85,7 +85,7 @@ function addExpense(e){
 			"Authorization":token
 		}
 	}
-	axios.post("http://65.1.131.247:3000/expense/addExpense",expObject,authHeader).then((result) => {
+	axios.post("http://43.205.195.48:3000/expense/addExpense",expObject,authHeader).then((result) => {
 		alert("please refresh the page");
 	}).catch((err) => {
 		console.log(err);
@@ -124,7 +124,7 @@ function display(obj){
 				"Authorization":token
 			}
 		}
-		axios.delete("http://65.1.131.247:3000/expense/deleteExpense/"+id,authHeader).then((result) => {
+		axios.delete("http://43.205.195.48:3000/expense/deleteExpense/"+id,authHeader).then((result) => {
 			alert("please refresh the page");
 			console.log(result.data.message);
 		}).catch((err) => {
@@ -134,13 +134,13 @@ function display(obj){
 }
 
 async function buypremium(e){
-	const response=await axios.get('http://65.1.131.247:3000/purchase/premiummembership',{headers:{"Authorization":token}});
+	const response=await axios.get('http://43.205.195.48:3000/purchase/premiummembership',{headers:{"Authorization":token}});
 	console.log(response);
 	var options={
 		"key":response.data.key_id,
 		"order_id":response.data.order.id,
 		"handler":async function(result){
-			await axios.post('http://65.1.131.247:3000/purchase/updatetransactionstatus',{
+			await axios.post('http://43.205.195.48:3000/purchase/updatetransactionstatus',{
 				status:'success',
 				order_id:options.order_id,
 				payment_id:result.razorpay_payment_id},{
@@ -153,7 +153,7 @@ async function buypremium(e){
 		rzp1.open();
 		e.preventDefault();
 		rzp1.on('payment.failed',function(result){
-			axios.post('http://65.1.131.247:3000/purchase/updatetransactionstatus',{
+			axios.post('http://43.205.195.48:3000/purchase/updatetransactionstatus',{
 				status:'failed',
 				order_id:options.order_id,
 				payment_id:result.error.metadata.payment_id},{
@@ -164,7 +164,7 @@ async function buypremium(e){
 
 }
 function leaderBoard(){
-	axios.get('http://65.1.131.247:3000/premium/leaderboard',{headers:{"Authorization":token}}).then((result) => {
+	axios.get('http://43.205.195.48:3000/premium/leaderboard',{headers:{"Authorization":token}}).then((result) => {
 		result.data.forEach((obj) => {
 			showLeaderboard(obj);
 		});
@@ -179,7 +179,7 @@ function showLeaderboard(obj){
 	board.appendChild(li);
 }
 function download(){
-		axios.get('http://65.1.131.247:3000/premium/download', { headers: {"Authorization" : token} })
+		axios.get('http://43.205.195.48:3000/premium/download', { headers: {"Authorization" : token} })
 		.then((response) => {
 			if(response.status === 200){
 				var a = document.createElement("a");
@@ -331,7 +331,7 @@ function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previo
 		pagination.appendChild(btn4);
 }
 async function getExpense(page){
-	const result=await axios.get(`http://65.1.131.247:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
+	const result=await axios.get(`http://43.205.195.48:3000/expense/getExpenses/${page}`,{headers:{'Authorization':token,'rows':localStorage.getItem("rows")}})
 	for(let i=table.rows.length-1;i>0;i--){
 		table.deleteRow(i);
 	}

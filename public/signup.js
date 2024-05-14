@@ -14,7 +14,7 @@ function userSignup(e){
 	user.email=email;
 	user.password=password;
 	console.log("in login.js");
-	axios.post('http://65.1.131.247:3000/user/signup',user).then((res) => {
+	axios.post('http://43.205.195.48:3000/user/signup',user).then((res) => {
 		const msg=document.createElement('h2');
 			console.log(res.status);
 			msg.append(document.createTextNode(res.data.message));
