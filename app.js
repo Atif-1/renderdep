@@ -34,6 +34,9 @@ app.use((req,res)=>{
 	console.log(req.url);
 	res.sendFile(path.join(__dirname,`/public/${req.url}`));
 })
+app.use('/',(req,res)=>{
+	res.send({ "name": "Expense Tracker" });
+})
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
