@@ -1,10 +1,13 @@
 const express=require('express');
 const path=require('path');
 const cors=require('cors');
-const helmet=require('helmet');
 require("dotenv").config();
 const sequelize=require('./util/database');
 const app=express();
+
+app.use('/',(req,res)=>{
+	res.send({ "name": "Expense Tracker" });
+})	
 
 
 const userRoute=require('./routes/user');
@@ -34,10 +37,6 @@ app.use((req,res)=>{
 	console.log(req.url);
 	res.sendFile(path.join(__dirname,`/public/${req.url}`));
 })
-app.use('/',(req,res)=>{
-	res.send({ "name": "Expense Tracker" });
-})
-
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
