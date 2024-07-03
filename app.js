@@ -28,10 +28,10 @@ app.use('/purchase',purchaseRoute);
 app.use('/premium',premiumRoute);
 app.use('/password',passwordRoute);
 app.use('/downloads',downloadRoutes);
-// app.use((req,res)=>{
-// 	console.log(req.url);
-// 	res.sendFile(path.join(__dirname,`/public/${req.url}`));
-// })
+app.use((req,res)=>{
+	console.log(req.url);
+	res.sendFile(path.join(__dirname,`/public/${req.url}`));
+})
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
