@@ -15,5 +15,4 @@ exports.getLeaderboard=async(req,res,next)=>{
 		logger.error('controller-premium'+err);
 		res.status(500);
 	}
-
 }

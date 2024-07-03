@@ -1,6 +1,5 @@
 const form=document.querySelector('form');
 
-
 form.addEventListener('submit',userSignup);
 
 function userSignup(e){

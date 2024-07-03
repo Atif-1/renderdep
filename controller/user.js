@@ -30,6 +30,7 @@ exports.postUser=async (req,res,next)=>{
 	}
 }
 
+
 exports.userLogin=async (req,res,next)=>{
 	const email=req.body.email;
 	const password=req.body.password;

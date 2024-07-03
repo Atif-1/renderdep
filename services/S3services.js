@@ -29,7 +29,6 @@ const  uploadToS3=(data,fileName)=>{
 		console.log(err);
 	}
 }
-
 module.exports={
 	uploadToS3
 }

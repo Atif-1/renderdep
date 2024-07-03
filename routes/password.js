@@ -7,3 +7,4 @@ router.get('/resetpassword/:uuid',passController.resetPassword);
 router.post('/updatepassword',passController.updatePassword);
 
 module.exports=router;
+

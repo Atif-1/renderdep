@@ -344,5 +344,4 @@ async function getExpense(page){
 function logout(){
 	localStorage.removeItem("token");
 	window.location.assign('./login.html');
-
 }

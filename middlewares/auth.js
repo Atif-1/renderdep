@@ -11,6 +11,7 @@ exports.authenticate=(req,res,next)=>{
 		console.log(err);
 	});	
 }
+
 exports.getUser=(req,res,next)=>{
 	const token=req.header("Authorization");
 	const userId=jwt.verify(token,"secretKey");
