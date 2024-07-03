@@ -233,7 +233,7 @@ function dailyExp(){
 	dailyBtn.style.visibility="hidden";
 }
 function weeklyExp(){
-	let dateOffset = (24*60*60*1000) * 7; //7 days
+	let dateOffset = (24*60*60*1000) * 6; //6 days
 	let end = new Date();
 	let start=new Date();
 
@@ -241,7 +241,8 @@ function weeklyExp(){
 	const weeklyExpenses=[];
 	const h4=document.createElement('h4');
 	h4.style.color="red";
-	if(start && end){
+	console.log(start);
+	if(end){
 		for(let exp of totalExpenses){
 			if(new Date(exp.createdAt).getFullYear()>=new Date(start).getFullYear() && new Date(exp.createdAt).getFullYear()<=new Date(end).getFullYear()){
 				if(new Date(exp.createdAt).getMonth()>=new Date(start).getMonth() && new Date(exp.createdAt).getMonth()<=new Date(end).getMonth()){
