@@ -31,7 +31,7 @@ exports.sendMail=async(req,res,next)=>{
 				sender,
 				to:reciever,
 				subject:'Demo Reset Password',
-				textContent:`http://localhost:3000/password/resetpassword/${uuidV4}`
+				textContent:`https://renderdep.onrender.com/password/resetpassword/${uuidV4}`
 			});
 			res.json({message:'successfull'});
 		}
