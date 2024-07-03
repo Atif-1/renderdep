@@ -233,7 +233,7 @@ function dailyExp(){
 	dailyBtn.style.visibility="hidden";
 }
 function weeklyExp(){
-	let dateOffset = (24*60*60*1000) * 6; //6 days
+	let dateOffset = (24*60*60*1000) * 7; //7 days
 	let end = new Date();
 	let start=new Date();
 
