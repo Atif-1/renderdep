@@ -5,11 +5,6 @@ require("dotenv").config();
 const sequelize=require('./util/database');
 const app=express();
 
-app.use('/',(req,res)=>{
-	res.send({ "name": "Expense Tracker" });
-})	
-
-
 const userRoute=require('./routes/user');
 const expenseRoute=require('./routes/expense');
 const purchaseRoute=require('./routes/purchase');
@@ -33,10 +28,10 @@ app.use('/purchase',purchaseRoute);
 app.use('/premium',premiumRoute);
 app.use('/password',passwordRoute);
 app.use('/downloads',downloadRoutes);
-app.use((req,res)=>{
-	console.log(req.url);
-	res.sendFile(path.join(__dirname,`/public/${req.url}`));
-})
+// app.use((req,res)=>{
+// 	console.log(req.url);
+// 	res.sendFile(path.join(__dirname,`/public/${req.url}`));
+// })
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
