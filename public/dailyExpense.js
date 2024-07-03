@@ -218,7 +218,7 @@ function dailyExp(){
 	if(dailyExpenses.length>0){
 		let dailyTotal=0
 		for(let exp of dailyExpenses){
-			total+=exp.amount;
+			dailytotal+=exp.amount;
 			const li=document.createElement('li');
 			li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
 			dailyList.appendChild(li);
