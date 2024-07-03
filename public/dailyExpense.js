@@ -10,8 +10,8 @@ const downloadBtn=document.querySelector('#download-btn');
 const downloadList=document.querySelector('#download-links');
 const dailyList=document.querySelector('#daily-exp');
 const dailyBtn=document.querySelector('#dailyBtn');
-const weeklyList=document.querySelector('#weekly-exp');
-const weeklyBtn=document.querySelector('#weeklyBtn');
+// const weeklyList=document.querySelector('#weekly-exp');
+// const weeklyBtn=document.querySelector('#weeklyBtn');
 const monthlyList=document.querySelector('#monthly-exp');
 const monthlyBtn=document.querySelector('#monthlyBtn');
 const pagination=document.querySelector('#exp-pagination');
@@ -51,7 +51,7 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 			nav.append(proFeature1);
 			proFeature1.addEventListener('click',leaderBoard);
 			dailyBtn.disabled=false;
-			weeklyBtn.disabled=false;
+			// weeklyBtn.disabled=false;
 			monthlyBtn.disabled=false;
 		}
 		else{
