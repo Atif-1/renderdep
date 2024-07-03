@@ -232,47 +232,47 @@ function dailyExp(){
 	}
 	dailyBtn.style.visibility="hidden";
 }
-function weeklyExp(){
-	let dateOffset = (24*60*60*1000) * 6; //6 days
-	let end = new Date();
-	let start=new Date();
+// function weeklyExp(){
+// 	let dateOffset = (24*60*60*1000) * 6; //6 days
+// 	let end = new Date();
+// 	let start=new Date();
 
-	start.setTime(end.getTime() - dateOffset);
-	const weeklyExpenses=[];
-	const h4=document.createElement('h4');
-	h4.style.color="red";
-	console.log(start);
-	if(end){
-		for(let exp of totalExpenses){
-			if(new Date(exp.createdAt).getFullYear()>=new Date(start).getFullYear() && new Date(exp.createdAt).getFullYear()<=new Date(end).getFullYear()){
-				if(new Date(exp.createdAt).getMonth()>=new Date(start).getMonth() && new Date(exp.createdAt).getMonth()<=new Date(end).getMonth()){
-					if(new Date(exp.createdAt).getDate()>=new Date(start).getDate() && new Date(exp.createdAt).getDate()<=new Date(end).getDate()){
-						weeklyExpenses.push(exp);
-					}
-				}
-			}
-		}
-		if(weeklyExpenses.length>0){
-			let weeekTotal=0;
-			for(let exp of weeklyExpenses){
-				weeekTotal+=exp.amount;
-				const li=document.createElement('li');
-				li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
-				weeklyList.appendChild(li);
-			}
-			h4.append(document.createTextNode(` Total Expense-:${weeekTotal}`));
-			weeklyList.appendChild(h4);
-		}
-		else{
-			h4.append(document.createTextNode(`No expenses`));
-			weeklyList.appendChild(h4);
-		}
-		weeklyBtn.style.visibility="hidden";
-	}
-	else{
-		alert("please fill start and end date");
-	}
-}
+// 	start.setTime(end.getTime() - dateOffset);
+// 	const weeklyExpenses=[];
+// 	const h4=document.createElement('h4');
+// 	h4.style.color="red";
+// 	console.log(start);
+// 	if(end){
+// 		for(let exp of totalExpenses){
+// 			if(new Date(exp.createdAt).getFullYear()>=new Date(start).getFullYear() && new Date(exp.createdAt).getFullYear()<=new Date(end).getFullYear()){
+// 				if(new Date(exp.createdAt).getMonth()>=new Date(start).getMonth() && new Date(exp.createdAt).getMonth()<=new Date(end).getMonth()){
+// 					if(new Date(exp.createdAt).getDate()>=new Date(start).getDate() && new Date(exp.createdAt).getDate()<=new Date(end).getDate()){
+// 						weeklyExpenses.push(exp);
+// 					}
+// 				}
+// 			}
+// 		}
+// 		if(weeklyExpenses.length>0){
+// 			let weeekTotal=0;
+// 			for(let exp of weeklyExpenses){
+// 				weeekTotal+=exp.amount;
+// 				const li=document.createElement('li');
+// 				li.append(document.createTextNode(`Amount:${exp.amount} Description:${exp.description} Category:${exp.category}`));
+// 				weeklyList.appendChild(li);
+// 			}
+// 			h4.append(document.createTextNode(` Total Expense-:${weeekTotal}`));
+// 			weeklyList.appendChild(h4);
+// 		}
+// 		else{
+// 			h4.append(document.createTextNode(`No expenses`));
+// 			weeklyList.appendChild(h4);
+// 		}
+// 		weeklyBtn.style.visibility="hidden";
+// 	}
+// 	else{
+// 		alert("please fill start and end date");
+// 	}
+// }
 function monthlyExp(){
 	const monthlyExpenses=[];
 	const h3=document.createElement('h3');
