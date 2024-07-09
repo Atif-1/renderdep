@@ -1,10 +1,10 @@
 const jwt=require('jsonwebtoken');
 const User=require('../model/user');
-require("dotenv").config();
+
 
 exports.authenticate=(req,res,next)=>{
 	const token=req.header("Authorization");
-	const userId=jwt.verify(token,process.env.JWT_TOKEN);
+	const userId=jwt.verify(token,"secretKey");
 	User.findByPk(userId.userId).then((user) => {
 		req.user=user; 
 		next();
@@ -15,7 +15,7 @@ exports.authenticate=(req,res,next)=>{
 
 exports.getUser=(req,res,next)=>{
 	const token=req.header("Authorization");
-	const userId=jwt.verify(token,JWT_TOKEN);
+	const userId=jwt.verify(token,"secretKey");
 	User.findByPk(userId.userId).then((user) => {
 		req.user=user;
 		next();
