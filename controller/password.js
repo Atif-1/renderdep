@@ -3,10 +3,12 @@ const uuid=require('uuid');
 const bcrypt=require('bcrypt');
 require("dotenv").config();
 const logger=require('../util/logger');
+const path=require('path');
 
 const ForgetPasswordRequest=require('../model/ForgetPasswordRequest');
 const User=require('../model/user');
-const forgetPasswordRequest = require('../model/ForgetPasswordRequest');
+const { where, Transaction } = require('sequelize');
+const sequelize = require('../util/database');
 
 
 
@@ -46,26 +48,41 @@ exports.resetPassword=async(req,res,next)=>{
 	try{
 		const userUuid=req.params.uuid; 
 		const passwordRequest=await ForgetPasswordRequest.findByPk(userUuid);
+		const userid=passwordRequest.userId;
+		const user=await User.findOne({where:{id:userid}});
+		req.session.email=user.email;
+		req.session.uuid=userUuid;
 		if(passwordRequest.isactive){
-			res.status(200).redirect('../public/updatepassword.html');//ip address
+			res.sendFile(process.mainModule.path+'/public/updatePassword.html');//ip address	
 		}
 		else{
-			res.json({message:'failed'});
-		}
-	}catch(err){logger.error('controller-password'+err);}
+			res.send("<html><body><h1>Link Expired</h1></body></html>");
+		}	
+	}catch(err){logger.error('reset-controller-password'+err);}
 }
 
 exports.updatePassword=async(req,res,next)=>{
 	try{
-		const email=req.body.email;
+		if(req.session.email && req.session.uuid){
+		const passwordRequest=await ForgetPasswordRequest.findByPk(req.session.uuid);
+		const email=req.session.email;
 		const newpassword=req.body.password;
-		bcrypt.hash(newpassword,10,async(err,hash)=>{
+		if(passwordRequest.isactive){
+		bcrypt.hash(newpassword,10,async(err,hash)=>{  
 			await User.update({password:hash},{where:{email:email}});
-		})
-		const user=await User.findOne({where:{email:req.body.email}});
-		await forgetPasswordRequest.update({isactive:false},{where:{userId:user.id}});
-		res.status(200).json({status:'success',message:'successfully updated'});
+		});
+		await ForgetPasswordRequest.update({isactive:false},{where:{id:req.session.uuid}});
+		return res.status(200).json({success:true,message:"password changed"});
+		}
+		else{
+			return res.status(400).json({success:true,message:"link is already used"});
+		}
+		}
+		else{
+			res.status(400).json({success:false,message:"Something went wrong please try again"});
+		}
 	}catch(err){
-		logger.error('controller-password'+err);
+		logger.error('update-controller-password'+err);
+		return res.status(500).json({message:"Server Error"});
 	}
 }

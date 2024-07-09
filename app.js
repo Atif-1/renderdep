@@ -1,9 +1,11 @@
 const express=require('express');
+const session=require('express-session');
 const path=require('path');
 const cors=require('cors');
 require("dotenv").config();
 const sequelize=require('./util/database');
 const app=express();
+
 
 const userRoute=require('./routes/user');
 const expenseRoute=require('./routes/expense');
@@ -20,7 +22,8 @@ const ForgetPasswordRequests=require('./model/ForgetPasswordRequest');
 const DownloadLinks=require('./model/downloadLink');
 
 app.use(cors());
-app.use(express.json());	
+app.use(express.json());
+app.use(session({ secret: process.env.SESSION_SEC }));
 
 app.use('/user',userRoute);
 app.use('/expense',expenseRoute);
