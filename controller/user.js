@@ -7,7 +7,7 @@ require("dotenv").config();
 
 
 function generatetoken(id,name,ispremium){
-	return jwt.sign({userId:id,name:name,ispremium:ispremium},process.env.TOKEN_SECRET);
+	return jwt.sign({userId:id,name:name,ispremium:ispremium},process.env.JWT_SECRET);
 }
 
 exports.postUser=async (req,res,next)=>{
@@ -29,6 +29,7 @@ exports.postUser=async (req,res,next)=>{
 		logger.error('controller-user'+err);
 	}
 }
+
 
 exports.userLogin=async (req,res,next)=>{
 	const email=req.body.email;

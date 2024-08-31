@@ -68,7 +68,6 @@ exports.getExpenses=async (req,res,next)=>{
 		previousPage:page-1,
 		lastPage:Math.ceil(totalexp/rows)
 	})
-
 	}catch(err){
 		logger.error('controller-expense'+err);
 		res.status(500);

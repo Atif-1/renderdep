@@ -7,4 +7,5 @@ function logToFile(message) {
 const logger = {
   error: (message) => logToFile(`${message}`),
 };
+
 module.exports = logger;

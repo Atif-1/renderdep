@@ -10,4 +10,5 @@ const DownloadLink=sequelize.define('downloads',{
 	}
 })
 
+
 module.exports=DownloadLink;

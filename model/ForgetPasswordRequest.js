@@ -14,4 +14,5 @@ const forgetPasswordRequest=sequelize.define('ForgetPasswordRequests',{
 	}
 })
 
+
 module.exports=forgetPasswordRequest;

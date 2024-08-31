@@ -1,7 +1,8 @@
 body{
 	margin: 0;
 	padding: 0;
-	background-color: rgb(177, 199, 177);
+	background: rgb(174, 238, 232);
+	background: radial-gradient(circle, rgba(174,238,233,1) 0%, rgba(177,233,148,1) 100%); 
 }	
 
 main{
@@ -12,7 +13,8 @@ main{
 	padding: 1rem;
 	margin: auto;
 	align-content: center;
-	background-color: rgb(75, 166, 75);
+	background: rgb(255,203,93);
+	background: linear-gradient(0deg, rgba(255,203,93,1) 0%, rgba(90,156,255,1) 100%);   
 }
 label{
 	color: white;
@@ -111,11 +113,11 @@ nav a{
 	float: right;
 }
 nav a:hover{
-	color: darkblue;
+	color: rgb(19, 152, 19);
 	background-color:   rgb(202, 228, 202);
 }
 .nav-active{
-	color: darkblue;
+	color: rgb(19, 152, 19);
 	background-color:   rgb(202, 228, 202);
 }
 .forgetpass{
@@ -124,7 +126,7 @@ nav a:hover{
 }
 .forgetpass:hover{
 	border-radius: 5px;
-	background-color: blue;
+	background-color: rgb(93, 122, 235);
 	color: white;
 }
 .send-btn{
@@ -155,9 +157,8 @@ nav a:hover{
 	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 	font-size: 1.5rem;
 	text-align: center;
-	-webkit-text-stroke: 1px black;
 	text-shadow: 2px 2px 5px yellow,2px 2px 5px yellow;
-	color: white;
+	color: rgb(19, 152, 19);
 }
 .weeklyDate{
 	width: 20%;

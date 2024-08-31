@@ -1,6 +1,7 @@
 const jwt=require('jsonwebtoken');
 const User=require('../model/user');
 
+
 exports.authenticate=(req,res,next)=>{
 	const token=req.header("Authorization");
 	const userId=jwt.verify(token,"secretKey");
@@ -9,8 +10,9 @@ exports.authenticate=(req,res,next)=>{
 		next();
 	}).catch((err) => {
 		console.log(err);
-	});	
+	});		
 }
+
 exports.getUser=(req,res,next)=>{
 	const token=req.header("Authorization");
 	const userId=jwt.verify(token,"secretKey");
