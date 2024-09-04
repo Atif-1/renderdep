@@ -13,10 +13,8 @@ function userSignup(e){
 	user.name=name;
 	user.email=email;
 	user.password=password;
-	console.log("in login.js");
 	axios.post('https://renderdep.vercel.app/user/signup',user).then((res) => {
 		const msg=document.createElement('h2');
-			console.log(res.status);
 			msg.append(document.createTextNode(res.data.message));
 			msg.style.color="red";
 			main.appendChild(msg);

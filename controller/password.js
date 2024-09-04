@@ -33,7 +33,7 @@ exports.sendMail=async(req,res,next)=>{
 				sender,
 				to:reciever,
 				subject:'Demo Reset Password',
-				textContent:`https://renderdep.vercel.app/password/resetpassword/${uuidV4}`
+				textContent:`https://renderdep.onrender.com/password/resetpassword/${uuidV4}`
 			});
 			res.json({message:'successfull'});
 		}
