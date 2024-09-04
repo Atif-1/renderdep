@@ -24,7 +24,9 @@ const DownloadLinks=require('./model/downloadLink');
 app.use(cors());
 app.use(express.json());
 app.use(session({ secret: process.env.SESSION_SEC }));
-
+app.use(("/"),(req,res)=>{
+	res.status(200).json({success:"true",messge:"working"});
+})
 app.use('/user',userRoute);
 app.use('/expense',expenseRoute);
 app.use('/purchase',purchaseRoute);
