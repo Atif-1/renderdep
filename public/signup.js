@@ -13,7 +13,7 @@ function userSignup(e){
 	user.name=name;
 	user.email=email;
 	user.password=password;
-	axios.post('https://renderdep.vercel.app/user/signup',user).then((res) => {
+	axios.post('https://renderdep.onrender.com/user/signup',user).then((res) => {
 		const msg=document.createElement('h2');
 			msg.append(document.createTextNode(res.data.message));
 			msg.style.color="red";
