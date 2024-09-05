@@ -10,11 +10,11 @@ function userLogin(e){
 	var user=new Object();
 	user.email=email;
 	user.password=password;
-	axios.post('https://renderdep.vercel.app/user/login',user).then((res) => {
-		console.log(res.data.token);
+	axios.post('https://renderdep.onrender.com/user/login',user).then((res) => {
+		console.log(res.data);
 		if(res.data.success){
 			localStorage.setItem("token",res.data.token);
-			window.location.assign("./dailyExpense.html");
+			window.location.assign("./dailyExpense.	html");
 		}
 		else{ 
 		const Msg=document.createElement('h2');

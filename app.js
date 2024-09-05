@@ -40,7 +40,7 @@ Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
 
-User.hasMany(ForgetPasswordRequests);
+User.hasMany(ForgetPasswordRequests);	
 ForgetPasswordRequests.belongsTo(User);
 
 User.hasMany(DownloadLinks);

@@ -35,13 +35,18 @@ exports.userLogin=async (req,res,next)=>{
 	const email=req.body.email;
 	const password=req.body.password;
 	if(await  User.findAll({where:{email:email}})==false){
+		console.log("in 1");
 		res.status(404).json({success:false,message:"User not found"});
 	}else{
+		console.log("in 2");
 		User.findAll({where:{email:email}}).then(async (result) => {
 			if(await bcrypt.compare(password,result[0].password)){
+				console.log("in 2.1");
+				console.log(generatetoken(result[0].id,result[0].name,result[0].ispremium));
 				res.status(200).json({success:true,message:"User login Successfully",token:generatetoken(result[0].id,result[0].name,result[0].ispremium)});
 			}
 			else{
+				console.log("in 2.2");
 				res.status(401).json({success:false,message:"User not authorised"});
 			}
 		}).catch((err) => {
