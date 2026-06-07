@@ -13,6 +13,7 @@ const purchaseRoute=require('./routes/purchase');
 const premiumRoute=require('./routes/premium');
 const passwordRoute=require('./routes/password');
 const downloadRoutes=require('./routes/downloads');
+const profileRouter=require("./routes/profileRoutes");
 
 
 const User=require('./model/user');
@@ -24,6 +25,8 @@ const DownloadLinks=require('./model/downloadLink');
 app.use(cors());
 app.use(express.json());
 app.use(session({ secret: process.env.SESSION_SEC }));
+
+app.use("/",profileRouter);
 app.use('/user',userRoute);
 app.use('/expense',expenseRoute);
 app.use('/purchase',purchaseRoute);
